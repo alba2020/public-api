@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Services\FBService;
 use App\Services\VKService;
 use Illuminate\Support\ServiceProvider;
 use App;
+use App\Services\SMMAuthService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +18,15 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         App::bind(VKService::class, function() {
-            return new VKService();
+            return new VKService(config('services.vk'));
+        });
+
+        App::bind(SMMAuthService::class, function() {
+            return new SMMAuthService();
+        });
+
+        App::bind(FBService::class, function() {
+            return new FBService(config('services.fb'));
         });
     }
 

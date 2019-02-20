@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Services\VKService;
+use App\Services\FBService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-class VKController extends Controller {
+class FBController extends Controller {
 
-    public function token(Request $request, VKService $vk)
+    public function token(Request $request, FBService $fb)
     {
         $validator = Validator::make($request->all(), [
             'code' => 'required'
@@ -22,8 +22,12 @@ class VKController extends Controller {
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $vk_response = $vk->getToken($request->post('code'));
+        $token = $fb->getToken($request->post('code'));
+        $confirm = $fb->confirmToken($token->access_token, $token->access_token);
 
-        return response()->json($vk_response, Response::HTTP_OK);
+        return response()->json([
+            'token' => $token,
+            'confirm' => $confirm->data,
+        ], Response::HTTP_OK);
     }
 }

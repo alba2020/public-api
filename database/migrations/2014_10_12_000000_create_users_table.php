@@ -24,6 +24,9 @@ class CreateUsersTable extends Migration
 
             $table->string('vk_id')->nullable();
             $table->string('vk_token')->nullable();
+
+            $table->string('fb_id')->nullable();
+            $table->string('fb_token')->nullable();
         });
     }
 

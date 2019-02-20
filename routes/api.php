@@ -41,3 +41,4 @@ Route::get('cat', function() {
 
 
 Route::post('vk/token', 'API\VKController@token');
+Route::post('fb/token', 'API\FBController@token');

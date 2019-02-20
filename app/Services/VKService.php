@@ -4,33 +4,33 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 
-
 class VKService
 {
+    private $client_id, $secret, $redirect_uri;
+    private $httpClient;
+
+    public function __construct($config) {
+        $this->client_id = $config['client_id'];
+        $this->secret = $config['secret'];
+        $this->redirect_uri = $config['redirect_uri'];
+
+        $this->httpClient = new Client();
+    }
+
     public function getToken($code)
     {
-        $client_id = "6846339";
-        $secret = "zEOI50HlqbDQwoGpiJHV";
-        $redirect_uri = "http://localhost:3000/login";
-
-//        $url = "?client_id=" . $client_id;
-//        $url .= "&client_secret=" . $secret;
-//        $url .= "&redirect_uri=" . $redirect_uri;
-//        $url .= "&code=" . $code;
-
-        $client = new Client();
-
         try {
-            $vk_response = $client->get('https://oauth.vk.com/access_token',
-                [
-                    'query' => [
-                        'client_id' => $client_id,
-                        'client_secret' => $secret,
-                        'redirect_uri' => $redirect_uri,
-                        'code' => $code,
+            $vk_response = $this->httpClient
+                ->get('https://oauth.vk.com/access_token',
+                    [
+                        'query' => [
+                            'client_id' => $this->client_id,
+                            'client_secret' => $this->secret,
+                            'redirect_uri' => $this->redirect_uri,
+                            'code' => $code,
+                        ]
                     ]
-                ]
-            )->getBody()->getContents();
+                )->getBody()->getContents();
 
         } catch (GuzzleException $ex) {
 //            return response()->json([
@@ -38,7 +38,6 @@ class VKService
 //            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $vk_response = json_decode($vk_response);
-        return $vk_response;
+        return json_decode($vk_response);
     }
 }

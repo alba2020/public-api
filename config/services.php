@@ -40,4 +40,16 @@ return [
         ],
     ],
 
+    'vk' => [
+        'client_id' => env('VK_CLIENT_ID'),
+        'secret' => env('VK_SECRET'),
+        'redirect_uri' => env('VK_REDIRECT_URI'),
+    ],
+
+    'fb' => [
+        'client_id' => env('FB_CLIENT_ID'),
+        'secret' => env('FB_SECRET'),
+        'redirect_uri' => env('FB_REDIRECT_URI'),
+    ],
+
 ];

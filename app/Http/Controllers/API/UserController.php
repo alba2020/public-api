@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Services\SMMAuthService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -16,22 +17,66 @@ class UserController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+    public function login(Request $request, SMMAuthService $smmAuth) {
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], Response::HTTP_UNAUTHORIZED);
-        }
+//        if ($request->foo) {
+//            return response()->json(['message' => 'foo found ' . $request->foo]);
+//        } else {
+//            return response()->json(['message' => 'foo not found']);
+//        }
 
-        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
-            $user = Auth::user();
-            $success['token'] = $user->createToken('MyApp')->accessToken;
-            return response()->json(['success' => $success], Response::HTTP_OK);
+        // login with email
+        if ($request->email && $request->password) {
+            $emailValidator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+            if ($emailValidator->fails()) {
+                return response()->json(['error' => $emailValidator->errors()],
+                    Response::HTTP_UNAUTHORIZED);
+            }
+
+            if ($token = $smmAuth->loginWithEmail($request->email, $request->password)) {
+                return response()->json(['token' => $token], Response::HTTP_OK);
+            } else {
+                return response()->json(['error' => 'Email authorization error'], Response::HTTP_UNAUTHORIZED);
+            }
+
+        // login with vk token
+        } else if($request->vk_id && $request->vk_token) {
+
+            $vkValidator = Validator::make($request->all(), [
+                'vk_id' => 'required',
+                'vk_token' => 'required'
+            ]);
+            if($vkValidator->fails()) {
+                return response()->json(['error' => $vkValidator->errors()],
+                    Response::HTTP_UNAUTHORIZED);
+            }
+
+            if ($token = $smmAuth->loginWithVK($request->vk_id, $request->vk_token)) {
+                return response()->json(['token' => $token], Response::HTTP_OK);
+            } else {
+                return response()->json(['error' => 'VK authorization error'], Response::HTTP_UNAUTHORIZED);
+            }
+
+        } else if($request->fb_id && $request->fb_token) {
+            $fbValidator = Validator::make($request->all(), [
+                'fb_id' => 'required',
+                'fb_token' => 'required'
+            ]);
+            if($fbValidator->fails()) {
+                return response()->json(['error' => $fbValidator->errors()],
+                    Response::HTTP_UNAUTHORIZED);
+            }
+
+            if ($token = $smmAuth->loginWithFB($request->fb_id, $request->fb_token)) {
+                return response()->json(['token' => $token], Response::HTTP_OK);
+            } else {
+                return response()->json(['error' => 'FB authorization error'], Response::HTTP_UNAUTHORIZED);
+            }
         } else {
-            return response()->json(['error' => 'Unauthorised'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
     }
 
