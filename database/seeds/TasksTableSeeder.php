@@ -12,6 +12,8 @@ class TasksTableSeeder extends Seeder
      */
     public function run()
     {
+        Task::truncate();
+
         factory(Task::class, 20)->create();
     }
 }

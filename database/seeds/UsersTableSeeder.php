@@ -12,12 +12,14 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        User::truncate();
+
         User::create([
             'name' => 'Administrator',
             'email' => 'admin@admin.panel',
             'password' => bcrypt('secret'),
         ]);
 
-        factory(User::class, 10)->create();
+        factory(User::class, 3)->create();
     }
 }

@@ -25,11 +25,14 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('user', 'API\UserController@details');
     Route::post('logout', 'API\UserController@logout');
 
-    Route::get('tasks', 'TasksController@index');
-    Route::get('tasks/{task}', 'TasksController@show');
-    Route::post('tasks', 'TasksController@store');
-    Route::put('tasks/{tasks}', 'TasksController@update');
-    Route::delete('tasks/{task}', 'TasksController@delete');
+    Route::get('tasks', 'API\TasksController@index');
+    Route::get('tasks/{task}', 'API\TasksController@show');
+    Route::post('tasks', 'API\TasksController@store');
+    Route::put('tasks/{tasks}', 'API\TasksController@update');
+    Route::delete('tasks/{task}', 'API\TasksController@delete');
+
+    Route::post('tasks/run', 'API\TasksController@run');
+    Route::post('tasks/reset', 'API\TasksController@reset');
 });
 
 

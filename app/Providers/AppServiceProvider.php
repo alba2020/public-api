@@ -28,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
         App::bind(FBService::class, function() {
             return new FBService(config('services.fb'));
         });
+
+        app()->singleton(App\Services\VKTransport::class, function() {
+            return new App\Services\VKTransport();
+        });
     }
 
     /**
