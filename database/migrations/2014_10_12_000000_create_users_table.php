@@ -27,6 +27,8 @@ class CreateUsersTable extends Migration
 
             $table->string('fb_id')->nullable();
             $table->string('fb_token')->nullable();
+
+            $table->string('fake_login')->nullable();
         });
     }
 
