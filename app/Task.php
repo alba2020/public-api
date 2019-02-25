@@ -50,4 +50,16 @@ class Task extends Model
             throw new CreateActionsException('unknown platform');
         }
     }
+
+    public function getIncompleteActions()
+    {
+        //todo optimize
+        $res = 0;
+        foreach($this->actions as $a) {
+            if ($a->status != Status::COMPLETED) {
+                $res++;
+            }
+        }
+        return $res;
+    }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Action;
 use App\Exceptions\CreateActionsException;
 use App\Http\Controllers\Controller;
+use App\Jobs\ActionJob;
 use App\Jobs\DoTaskJob;
 use App\Status;
 use App\Task;
@@ -15,7 +17,7 @@ class TasksController extends Controller
 {
     public function index()
     {
-        return Task::all();
+        return Task::with('actions')->get()->all();
     }
 
     public function show(Task $task)
@@ -65,26 +67,36 @@ class TasksController extends Controller
     {
         $tasks = Task::where('platform', 'fake')
                     ->where('type', 'like')
-                    ->where('completed', 0)
+                    ->where('status', Status::CREATED)
                     ->get()
                     ->all();
 
         foreach($tasks as $task) {
+//            todo optimize
 //            $job = new DoTaskJob();
-            DoTaskJob::dispatch($task)->onQueue('fake'); // dispatch($job);
+//            DoTaskJob::dispatch($task)->onQueue('fake'); // dispatch($job);
+            $actions = $task->actions()->get()->all();
+            foreach($actions as $a) {
+                ActionJob::dispatch($a)->onQueue('fake');
+            }
         }
 
-        return response()->json(['message' => 'run tasks'], Response::HTTP_OK);
+        return response()->json(['message' => 'run tasks ' . count($tasks)],
+            Response::HTTP_OK);
     }
 
     public function resetAll()
     {
-        foreach(Task::all() as $task) {
-            $task->completed = 0;
-            $task->save();
+        foreach(Action::all() as $a) {
+            $a->status = Status::CREATED;
+            $a->save();
         }
-        return response()->json(['message' => 'tasks reset'], Response::HTTP_OK);
+
+        foreach(Task::all() as $t) {
+            $t->status = Status::CREATED;
+            $t->save();
+        }
+
+        return response()->json(['message' => 'reset'], Response::HTTP_OK);
     }
-
-
 }

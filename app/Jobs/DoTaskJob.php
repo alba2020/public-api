@@ -14,6 +14,7 @@ class DoTaskJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $task;
+
     /**
      * Create a new job instance.
      *

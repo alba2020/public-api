@@ -10,7 +10,6 @@ class SMMAuthService
     public function loginWithEmail($email, $password)
     {
         $token = '';
-
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
             $user = Auth::user();
             $token = $user->createToken('MyApp')->accessToken;

@@ -14,6 +14,6 @@ class TasksTableSeeder extends Seeder
     {
         Task::truncate();
 
-        factory(Task::class, 3)->create();
+//        factory(Task::class, 3)->create();
     }
 }

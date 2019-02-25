@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\FBService;
 use App\Services\VKService;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App;
 use App\Services\SMMAuthService;
@@ -41,6 +42,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Schema::defaultStringLength(191);
     }
 }

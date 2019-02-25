@@ -93,7 +93,8 @@ class UserController extends Controller {
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['error' => $validator->errors()],
+                Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
 //        $input = $request->all();
