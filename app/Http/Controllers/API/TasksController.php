@@ -11,6 +11,8 @@ use App\Status;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class TasksController extends Controller
@@ -28,6 +30,21 @@ class TasksController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'platform' => ['required', Rule::in(['fake', 'instagram'])],
+            'n' => 'required|integer|min:1|max:100',
+            'speed' => 'required|integer|min:1|max:9',
+            'type' => ['required', Rule::in(['like', 'dislike'])],
+            'url' => 'required|url',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()],
+                Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // todo check available workers before creating task
+
         $task = new Task();
         $task->fill($request->all());
         $task->owner_id = Auth::user()->id;
@@ -38,8 +55,9 @@ class TasksController extends Controller
             $task->createActions();
         } catch (CreateActionsException $ex) {
             return response()->json([
+                'error' => 'create actions error',
                 'message' => $ex->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $taskWithActions = Task::where('id', $task->id)
@@ -65,23 +83,15 @@ class TasksController extends Controller
 
     public function runFake()
     {
-        $tasks = Task::where('platform', 'fake')
-                    ->where('type', 'like')
-                    ->where('status', Status::CREATED)
-                    ->get()
-                    ->all();
+        $numberOfActions = Task::run('fake');
+        return response()->json(['message' => 'run actions ' . $numberOfActions],
+            Response::HTTP_OK);
+    }
 
-        foreach($tasks as $task) {
-//            todo optimize
-//            $job = new DoTaskJob();
-//            DoTaskJob::dispatch($task)->onQueue('fake'); // dispatch($job);
-            $actions = $task->actions()->get()->all();
-            foreach($actions as $a) {
-                ActionJob::dispatch($a)->onQueue('fake');
-            }
-        }
-
-        return response()->json(['message' => 'run tasks ' . count($tasks)],
+    public function runInstagram()
+    {
+        $numberOfActions = Task::run('instagram');
+        return response()->json(['message' => 'run actions ' . $numberOfActions],
             Response::HTTP_OK);
     }
 
@@ -98,5 +108,22 @@ class TasksController extends Controller
         }
 
         return response()->json(['message' => 'reset'], Response::HTTP_OK);
+    }
+
+    public function undo(Task $task)
+    {
+        foreach($task->actions as $action) {
+            $action->status = Status::CREATED;
+            $action->save();
+        }
+
+        if($task->type == 'like')
+            $task->type = 'unlike';
+        else if($task->type == 'unlike')
+            $task->type = 'like';
+
+        $task->status = Status::CREATED;
+        $task->save();
+        return response()->json(['message' => 'unlike'], Response::HTTP_OK);
     }
 }

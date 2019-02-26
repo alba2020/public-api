@@ -29,6 +29,9 @@ class CreateUsersTable extends Migration
             $table->string('fb_token')->nullable();
 
             $table->string('fake_login')->nullable();
+
+            $table->string('instagram_login')->nullable();
+            $table->string('instagram_password')->nullable();
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Jobs\ActionJob;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\CreateActionsException;
 
@@ -22,32 +23,33 @@ class Task extends Model
     /* @throws \App\Exceptions\CreateActionsException */
     public function createActions()
     {
-        if ($this->platform == 'fake')
-        {
-            $availableUsers = User::fakeWorkers($this)->count();
-            if ($availableUsers < $this->n)
-            {
-                throw new CreateActionsException('not enough workers');
-            }
-
+        if ($this->platform == 'fake') {
             $workers = User::fakeWorkers($this)
-                            ->inRandomOrder()
-                            ->take($this->n)
-                            ->get()
-                            ->all();
-
-            foreach($workers as $worker)
-            {
-                Action::create([
-                    'task_id' => $this->id,
-                    'worker_id' => $worker->id,
-                    'status' => Status::CREATED
-                ]);
-            }
+                ->inRandomOrder()
+                ->take($this->n)
+                ->get()
+                ->all();
+        } else if ($this->platform == 'instagram') {
+            $workers = User::instagramWorkers($this)
+                ->inRandomOrder()
+                ->take($this->n)
+                ->get()
+                ->all();
         }
-        else
-        {
+        else {
             throw new CreateActionsException('unknown platform');
+        }
+
+        if (count($workers) < $this->n) {
+            throw new CreateActionsException('not enough workers');
+        }
+
+        foreach($workers as $worker) {
+            Action::create([
+                'task_id' => $this->id,
+                'worker_id' => $worker->id,
+                'status' => Status::CREATED
+            ]);
         }
     }
 
@@ -61,5 +63,32 @@ class Task extends Model
             }
         }
         return $res;
+    }
+
+    public static function run($platform, $type='')
+    {
+        // todo optimize one sql request
+        if ($type) {
+            $tasks = Task::where('platform', $platform)
+                ->where('type', $type)
+                ->where('status', Status::CREATED)
+                ->get()
+                ->all();
+        } else {
+            $tasks = Task::where('platform', $platform)
+                ->where('status', Status::CREATED)
+                ->get()
+                ->all();
+        }
+
+        $n = 0;
+        foreach($tasks as $task) {
+            foreach($task->actions as $action) {
+                // queue name = platform
+                ActionJob::dispatch($action)->onQueue($task->platform);
+                $n++;
+            }
+        }
+        return $n;
     }
 }

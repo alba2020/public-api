@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(TasksTableSeeder::class);
-
+        $this->call(FakesTableSeeder::class);
 
         $exitCode = Artisan::call('passport:install');
         echo "passport install " . $exitCode . "\n";

@@ -20,6 +20,14 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('secret'),
         ]);
 
-        factory(User::class, 11)->create();
+        factory(User::class, 8)->create();
+
+        User::create([
+            'instagram_login' => 'OaidaEbaba7133',
+            'instagram_password' => 'YjLJv8ZTrA'
+        ]);
+
+
+
     }
 }

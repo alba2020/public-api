@@ -15,12 +15,17 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(App\User::class, function (Faker $faker) {
+    $hasFake = rand(1, 100) < 60;
+    $hasInstagram = rand(1, 100) < 60;
+
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
         'remember_token' => Str::random(10),
-        'fake_login' => str_random(6),
+        'fake_login' => $hasFake ? $faker->userName : '',
+//        'instagram_login' => $hasInstagram ? $faker->userName : '',
+//        'instagram_password' => $hasInstagram ? $faker->pass
     ];
 });

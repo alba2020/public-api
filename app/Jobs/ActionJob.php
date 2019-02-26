@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Action;
+use App\Services\FakeService;
+use App\Services\InstagramService;
 use App\Status;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -26,6 +28,27 @@ class ActionJob implements ShouldQueue
         $this->action = $action;
     }
 
+    public function fake_like(Action $action)
+    {
+        $fakeService = app(FakeService::class);
+        $fakeService->like($action->worker, $action->task->url);
+    }
+
+    public function fake_unlike(Action $action)
+    {
+        $fakeService = app(FakeService::class);
+        $fakeService->unlike($action->worker, $action->task->url);
+    }
+
+    public function instagram_like(Action $action)
+    {
+        echo "*** instagram like action ***\n";
+        $username = $action->worker->instagram_login;
+        $password = $action->worker->instagram_password;
+        $instagramService = new InstagramService($username, $password);
+        $instagramService->like($action->task->url);
+    }
+
     /**
      * Execute the job.
      *
@@ -46,7 +69,15 @@ class ActionJob implements ShouldQueue
         $msg .= "$type $url (Action #$action_id)\n";
         echo $msg;
 
-        $action->status = Status::COMPLETED;
+        // --- action ---
+        $methodName = $task->platform . '_' . $task->type;
+        try {
+            $this->$methodName($action);
+            $action->status = Status::COMPLETED;
+        } catch (\Exception $ex) {
+            $action->status = Status::ERROR;
+        }
+        // ---------
         $action->save();
 
         if ($task->getIncompleteActions() == 0) {
@@ -54,6 +85,6 @@ class ActionJob implements ShouldQueue
             $task->save();
             echo "Task #$task_id is completed.\n";
         }
-        sleep(rand(1, 12));
+        sleep(rand(1, 8));
     }
 }

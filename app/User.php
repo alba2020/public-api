@@ -63,6 +63,15 @@ class User extends Authenticatable
                      ->whereNotIn('id', $ids);
     }
 
+    public function scopeInstagramWorkers($query, $task)
+    {
+        $ids = self::whoDid($task->url, $task->type);
+
+        return $query->where('instagram_login', '!=', null)
+            ->where('id', '!=', $task->owner_id)
+            ->whereNotIn('id', $ids);
+    }
+
     public static function whoDid($url, $type)
     {
         $ids = DB::table('tasks')

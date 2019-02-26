@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\FakeService;
 use App\Services\FBService;
 use App\Services\VKService;
 use Illuminate\Support\Facades\Schema;
@@ -32,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
 
         app()->singleton(App\Services\VKTransport::class, function() {
             return new App\Services\VKTransport();
+        });
+
+        app()->bind(FakeService::class, function() {
+            return new FakeService();
         });
     }
 
