@@ -43,10 +43,15 @@ class ActionJob implements ShouldQueue
     public function instagram_like(Action $action)
     {
         echo "*** instagram like action ***\n";
-        $username = $action->worker->instagram_login;
-        $password = $action->worker->instagram_password;
-        $instagramService = new InstagramService($username, $password);
+        $instagramService = new InstagramService($action->worker);
         $instagramService->like($action->task->url);
+    }
+
+    public function instagram_unlike(Action $action)
+    {
+        echo "*** instagram unlike action ***\n";
+        $instagramService = new InstagramService($action->worker);
+        $instagramService->unlike($action->task->url);
     }
 
     /**
@@ -75,6 +80,7 @@ class ActionJob implements ShouldQueue
             $this->$methodName($action);
             $action->status = Status::COMPLETED;
         } catch (\Exception $ex) {
+            echo "\n=== action method exception===\n";
             $action->status = Status::ERROR;
         }
         // ---------

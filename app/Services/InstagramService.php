@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use App\User;
 use InstagramAPI\Instagram;
 
 class InstagramService
 {
     private $ig;
 
-    public function __construct($username, $password) {
+    public function __construct(User $user) {
         $debug = false;
         $truncatedDebug = false;
         $storageConfig = [];
@@ -17,32 +18,51 @@ class InstagramService
 
         try {
             // Will resume if a previous session exists.
-            $ig->login($username, $password);
+            $ig->login($user->instagram_login, $user->instagram_password);
+
+            $p = $user->instagramProxy;
+            $proxy_string = "http://$p->login:$p->password@$p->ip:$p->port";
+            $ig->setProxy($proxy_string);
         } catch (\Exception $e) {
-            echo 'Something went wrong: '.$e->getMessage()."\n";
-            exit(0);
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram service constructor error: ' . $e->getMessage() . "\n";
+//            exit(0);
         }
         $this->ig = $ig;
     }
 
     public function getMediaId($url)
     {
-        $api = file_get_contents("http://api.instagram.com/oembed?url=$url");
-        $apiObj = json_decode($api, true);
-        $media_id = $apiObj['media_id'];
+        try {
+            $api = file_get_contents("http://api.instagram.com/oembed?url=$url");
+            $apiObj = json_decode($api, true);
+            $media_id = $apiObj['media_id'];
+        } catch (\Exception $e) {
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Get media id error: ' . $e->getMessage() . "\n";
+        }
         return $media_id;
     }
 
     public function like($url)
     {
         $mediaId = $this->getMediaId($url);
-        $response = $this->ig->media->like($mediaId);
+        try {
+            $response = $this->ig->media->like($mediaId);
+        } catch (\Exception $e) {
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram like error: ' . $e->getMessage() . "\n";
+        }
     }
 
     public function unlike($url)
     {
         $mediaId = $this->getMediaId($url);
-        $response = $this->ig->media->unlike($mediaId);
+        try {
+            $response = $this->ig->media->unlike($mediaId);
+        } catch (\Exception $e) {
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram unlike error: ' . $e->getMessage() . "\n";
+        }
     }
-
 }

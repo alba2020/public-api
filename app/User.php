@@ -82,4 +82,9 @@ class User extends Authenticatable
                 ->all();
         return $ids;
     }
+
+    public function instagramProxy()
+    {
+        return $this->belongsTo('App\Proxy');
+    }
 }

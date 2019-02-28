@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
 
             $table->string('instagram_login')->nullable();
             $table->string('instagram_password')->nullable();
+            $table->integer('instagram_proxy_id')->nullable();
         });
     }
 
