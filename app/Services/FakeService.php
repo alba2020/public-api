@@ -7,6 +7,8 @@ use App\User;
 
 class FakeService
 {
+    public static $types = ['like', 'unlike'];
+
     public function __construct() {
 
     }

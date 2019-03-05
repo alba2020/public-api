@@ -33,8 +33,9 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::put('tasks/{tasks}', 'API\TasksController@update');
     Route::delete('tasks/{task}', 'API\TasksController@delete');
 
-    Route::post('tasks/run/fake', 'API\TasksController@runFake');
-    Route::post('tasks/run/instagram', 'API\TasksController@runInstagram');
+//    Route::post('tasks/run/fake', 'API\TasksController@runFake');
+//    Route::post('tasks/run/instagram', 'API\TasksController@runInstagram');
+    Route::post('tasks/run/{platform}', 'API\TasksController@runPlatform');
 
     Route::post('tasks/reset', 'API\TasksController@resetAll');
     Route::post('tasks/undo/{task}', 'API\TasksController@undo');

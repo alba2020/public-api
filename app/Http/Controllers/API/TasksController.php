@@ -3,38 +3,41 @@
 namespace App\Http\Controllers\API;
 
 use App\Action;
+use App\Comment;
 use App\Exceptions\CreateActionsException;
 use App\Http\Controllers\Controller;
-use App\Jobs\ActionJob;
-use App\Jobs\DoTaskJob;
+use App\Services\FakeService;
+use App\Services\InstagramService;
 use App\Status;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use Validator;
 use Symfony\Component\HttpFoundation\Response;
+use Validator;
 
 class TasksController extends Controller
 {
     public function index()
     {
-        return Task::with('actions')->get()->all();
+        return Task::with(['actions', 'comments'])->get()->all();
     }
 
     public function show(Task $task)
     {
-        $t = Task::where('id', $task->id)->with('actions')->first();
+        $t = Task::find($task->id)->with(['actions', 'comments'])->first();
         return $t;
     }
 
     public function store(Request $request)
     {
+        $allowedTypes = array_merge(FakeService::$types, InstagramService::$types);
+
         $validator = Validator::make($request->all(), [
             'platform' => ['required', Rule::in(['fake', 'instagram'])],
             'n' => 'required|integer|min:1|max:100',
             'speed' => 'required|integer|min:1|max:9',
-            'type' => ['required', Rule::in(['like', 'dislike'])],
+            'type' => ['required', Rule::in($allowedTypes)],
             'url' => 'required|url',
         ]);
 
@@ -46,10 +49,15 @@ class TasksController extends Controller
         // todo check available workers before creating task
 
         $task = new Task();
-        $task->fill($request->all());
+        $task->fill($request->except('comments'));
         $task->owner_id = Auth::user()->id;
         $task->status = Status::CREATED;
         $task->save();
+
+        // create comments for task
+        foreach($request->comments as $comment) {
+            Comment::create(['text' => $comment, 'task_id' => $task->id]);
+        }
 
         try {
             $task->createActions();
@@ -60,11 +68,11 @@ class TasksController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $taskWithActions = Task::where('id', $task->id)
-                            ->with('actions')
+        $taskWithData = Task::find($task->id)
+                            ->with(['actions', 'comments'])
                             ->first();
 
-        return response()->json($taskWithActions, Response::HTTP_CREATED);
+        return response()->json($taskWithData, Response::HTTP_CREATED);
     }
 
     public function update(Request $request, Task $task)
@@ -81,18 +89,15 @@ class TasksController extends Controller
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function runFake()
+    public function runPlatform($platform)
     {
-        $numberOfActions = Task::run('fake');
-        return response()->json(['message' => 'run actions ' . $numberOfActions],
-            Response::HTTP_OK);
-    }
+        $numberOfActions = Task::run($platform);
 
-    public function runInstagram()
-    {
-        $numberOfActions = Task::run('instagram');
-        return response()->json(['message' => 'run actions ' . $numberOfActions],
-            Response::HTTP_OK);
+        return response()->json([
+            'message' => 'ok',
+            'platform' => $platform,
+            'actions' => $numberOfActions
+        ], Response::HTTP_OK);
     }
 
     public function resetAll()
@@ -110,6 +115,11 @@ class TasksController extends Controller
         return response()->json(['message' => 'reset'], Response::HTTP_OK);
     }
 
+    /**
+     * @param Task $task
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function undo(Task $task)
     {
         foreach($task->actions as $action) {
@@ -117,13 +127,29 @@ class TasksController extends Controller
             $action->save();
         }
 
-        if($task->type == 'like')
-            $task->type = 'unlike';
-        else if($task->type == 'unlike')
-            $task->type = 'like';
+        $reverse = [
+            'like' => 'unlike',
+            'unlike' => 'like',
+            'follow' => 'unfollow',
+            'unfollow' => 'follow',
+            'comment' => 'uncomment',
+            'uncomment' => 'comment'
+        ];
 
+//        if($task->type == 'like')
+//            $task->type = 'unlike';
+//        else if($task->type == 'unlike')
+//            $task->type = 'like';
+//        else if($task->type == 'follow')
+//            $task->type = 'unfollow';
+//        else if($task->type == 'unfollow')
+//            $task->type = 'follow';
+//        else
+//            throw new \Exception('unknown action type');
+
+        $task->type = $reverse[$task->type];
         $task->status = Status::CREATED;
         $task->save();
-        return response()->json(['message' => 'unlike'], Response::HTTP_OK);
+        return response()->json(['message' => 'undo'], Response::HTTP_OK);
     }
 }

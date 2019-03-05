@@ -20,6 +20,11 @@ class Task extends Model
         return $this->hasMany('App\Action');
     }
 
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
     /* @throws \App\Exceptions\CreateActionsException */
     public function createActions()
     {
@@ -65,6 +70,13 @@ class Task extends Model
         return $res;
     }
 
+    /**
+     * Runs tasks for selected platform
+     *
+     * @param string $platform
+     * @param string $type
+     * @return int
+     */
     public static function run($platform, $type='')
     {
         // todo optimize one sql request

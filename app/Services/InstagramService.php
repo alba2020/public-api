@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\User;
+use Illuminate\Support\Facades\Log;
 use InstagramAPI\Instagram;
 
 class InstagramService
 {
     private $ig;
+
+    public static $types = ['like', 'dislike', 'follow', 'unfollow', 'comment', 'uncomment'];
 
     public function __construct(User $user) {
         $debug = false;
@@ -31,7 +34,7 @@ class InstagramService
         $this->ig = $ig;
     }
 
-    public function getMediaId($url)
+    public static function getMediaId($url)
     {
         try {
             $api = file_get_contents("http://api.instagram.com/oembed?url=$url");
@@ -46,7 +49,7 @@ class InstagramService
 
     public function like($url)
     {
-        $mediaId = $this->getMediaId($url);
+        $mediaId = self::getMediaId($url);
         try {
             $response = $this->ig->media->like($mediaId);
         } catch (\Exception $e) {
@@ -64,5 +67,72 @@ class InstagramService
             echo 'Exception class: ' . get_class($e) . "\n";
             echo 'Instagram unlike error: ' . $e->getMessage() . "\n";
         }
+    }
+
+    private function getUserId($url)
+    {
+       $login = explode('/', $url)[3];
+       Log::info("get instagram login $login");
+
+       $userId = $this->ig->people->getUserIdForName($login);
+       Log::info("user id $userId");
+
+       return $userId;
+    }
+
+    public function follow($url)
+    {
+        try {
+            $userId = $this->getUserId($url);
+        } catch (\Exception $e) {
+            echo "Could not get userId\n";
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram follow error: ' . $e->getMessage() . "\n";
+        }
+
+        try {
+            $this->ig->people->follow($userId);
+        } catch (\Exception $e) {
+            echo "Could not follow\n";
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram follow error: ' . $e->getMessage() . "\n";
+        }
+    }
+
+    public function unfollow($url)
+    {
+        try {
+            $userId = $this->getUserId($url);
+            $this->ig->people->unfollow($userId);
+        } catch (\Exception $e) {
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram unfollow error: ' . $e->getMessage() . "\n";
+        }
+    }
+
+    public function comment($url, $commentText)
+    {
+        $mediaId = self::getMediaId($url);
+        try {
+            $response = $this->ig->media->comment($mediaId, $commentText);
+//            $response->printJson();
+            $commentId = $response->getComment()->getPk();
+        } catch (\Exception $e) {
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram comment error: ' . $e->getMessage() . "\n";
+        }
+        return $commentId;
+    }
+
+    public function uncomment($url, $commentId)
+    {
+        $mediaId = self::getMediaId($url);
+        try {
+            $response = $this->ig->media->deleteComment($mediaId, $commentId);
+        } catch (\Exception $e) {
+            echo 'Exception class: ' . get_class($e) . "\n";
+            echo 'Instagram uncomment error: ' . $e->getMessage() . "\n";
+        }
+        return $response;
     }
 }

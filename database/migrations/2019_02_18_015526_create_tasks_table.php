@@ -22,6 +22,8 @@ class CreateTasksTable extends Migration
             $table->integer('n');
             $table->integer('speed');
             $table->integer('status');
+            $table->string('instagram_media_id')->nullable();
+            $table->string('instagram_user_id')->nullable();
             $table->timestamps();
         });
     }

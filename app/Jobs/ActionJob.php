@@ -19,6 +19,13 @@ class ActionJob implements ShouldQueue
     private $action;
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
+    /**
      * Create a new job instance.
      *
      * @return void
@@ -52,6 +59,37 @@ class ActionJob implements ShouldQueue
         echo "*** instagram unlike action ***\n";
         $instagramService = new InstagramService($action->worker);
         $instagramService->unlike($action->task->url);
+    }
+
+    public function instagram_follow(Action $action)
+    {
+        echo "*** instagram follow action ***\n";
+        $instagramService = new InstagramService($action->worker);
+        $instagramService->follow($action->task->url);
+    }
+
+    public function instagram_unfollow(Action $action)
+    {
+        echo "*** instagram unfollow action ***\n";
+        $instagramService = new InstagramService($action->worker);
+        $instagramService->unfollow($action->task->url);
+    }
+
+    public function instagram_comment(Action $action)
+    {
+        echo "*** instagram comment action ***\n";
+        $instagramService = new InstagramService($action->worker);
+        $comment = $action->task->comments()->inRandomOrder()->first();
+        $commentId = $instagramService->comment($action->task->url, $comment->text);
+        $action->instagram_comment_id = $commentId;
+        $action->save();
+    }
+
+    public function instagram_uncomment(Action $action)
+    {
+        echo "*** instagram uncomment action ***\n";
+        $instagramService = new InstagramService($action->worker);
+        $instagramService->uncomment($action->task->url, $action->instagram_comment_id);
     }
 
     /**
@@ -91,6 +129,6 @@ class ActionJob implements ShouldQueue
             $task->save();
             echo "Task #$task_id is completed.\n";
         }
-        sleep(rand(1, 8));
+        sleep(rand(2, 6));
     }
 }
