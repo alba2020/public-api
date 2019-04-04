@@ -54,3 +54,13 @@ Route::get('cat', function() {
 
 Route::post('vk/token', 'API\VKController@token');
 Route::post('fb/token', 'API\FBController@token');
+
+
+Route::get('/nakrutka', function(Request $request, \App\Services\NakrutkaService $nakrutka) {
+//    $order = $nakrutka->add('http://example.com/test', 100);
+    $v = $request->input('v');
+    // return response()->json($order);
+    return response()->json([
+        'v' => $v
+    ]);
+});

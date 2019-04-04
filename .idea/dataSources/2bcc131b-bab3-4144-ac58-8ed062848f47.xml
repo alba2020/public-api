@@ -64,7 +64,6 @@
     </column>
     <index id="25" parent="6" name="jobs_queue_index">
       <ColNames>queue</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="26" parent="6">
       <ColNames>id</ColNames>
@@ -132,12 +131,10 @@
     <index id="40" parent="8" name="sqlite_autoindex_oauth_access_tokens_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <index id="41" parent="8" name="oauth_access_tokens_user_id_index">
       <ColNames>user_id</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="42" parent="8">
       <ColNames>id</ColNames>
@@ -175,7 +172,6 @@
     <index id="49" parent="9" name="sqlite_autoindex_oauth_auth_codes_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <key id="50" parent="9">
@@ -233,7 +229,6 @@
     </column>
     <index id="61" parent="10" name="oauth_clients_user_id_index">
       <ColNames>user_id</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="62" parent="10">
       <ColNames>id</ColNames>
@@ -260,7 +255,6 @@
     </column>
     <index id="67" parent="11" name="oauth_personal_access_clients_client_id_index">
       <ColNames>client_id</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="68" parent="11">
       <ColNames>id</ColNames>
@@ -288,12 +282,10 @@
     <index id="73" parent="12" name="sqlite_autoindex_oauth_refresh_tokens_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <index id="74" parent="12" name="oauth_refresh_tokens_access_token_id_index">
       <ColNames>access_token_id</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="75" parent="12">
       <ColNames>id</ColNames>
@@ -316,7 +308,6 @@
     </column>
     <index id="79" parent="13" name="password_resets_email_index">
       <ColNames>email</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <column id="80" parent="14" name="type">
       <Position>1</Position>
@@ -449,7 +440,6 @@
     </column>
     <index id="110" parent="17" name="users_email_unique">
       <ColNames>email</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <key id="111" parent="17">

@@ -8,6 +8,7 @@ use App\Exceptions\CreateActionsException;
 use App\Http\Controllers\Controller;
 use App\Services\FakeService;
 use App\Services\InstagramService;
+use App\Services\NakrutkaService;
 use App\Status;
 use App\Task;
 use Illuminate\Http\Request;
@@ -29,16 +30,16 @@ class TasksController extends Controller
         return $t;
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request, NakrutkaService $nakrutka) {
         $allowedTypes = array_merge(FakeService::$types, InstagramService::$types);
 
         $validator = Validator::make($request->all(), [
             'platform' => ['required', Rule::in(['fake', 'instagram'])],
-            'n' => 'required|integer|min:1|max:100',
+            'n' => 'required|integer|min:1|max:100', // total likes
             'speed' => 'required|integer|min:1|max:9',
             'type' => ['required', Rule::in($allowedTypes)],
             'url' => 'required|url',
+            'local' => 'integer' // local users to use
         ]);
 
         if ($validator->fails()) {
@@ -47,11 +48,22 @@ class TasksController extends Controller
         }
 
         // todo check available workers before creating task
+        // todo make order in nakrutka if needed
+        // todo check instagram?
 
         $task = new Task();
         $task->fill($request->except('comments'));
         $task->owner_id = Auth::user()->id;
         $task->status = Status::CREATED;
+
+//        todo test
+//        $local = $request->input('local');
+//        if ($local) {
+//          $remote = $task->n - $local;
+//          $task->n = $local;
+//          $nakrutka->add($task->url, $remote);
+//        }
+
         $task->save();
 
         // create comments for task

@@ -52,4 +52,9 @@ return [
         'redirect_uri' => env('FB_REDIRECT_URI'),
     ],
 
+    'nakrutka' => [
+        'api_url' => env('NAKRUTKA_API_URL'),
+        'api_key' => env('NAKRUTKA_API_KEY'),
+        'api_service' => env('NAKRUTKA_API_SERVICE'),
+    ],
 ];

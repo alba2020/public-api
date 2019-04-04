@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\FakeService;
 use App\Services\FBService;
+use App\Services\NakrutkaService;
 use App\Services\VKService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -37,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
 
         app()->bind(FakeService::class, function() {
             return new FakeService();
+        });
+
+        app()->bind(NakrutkaService::class, function() {
+            return new NakrutkaService(config('services.nakrutka'));
         });
     }
 
