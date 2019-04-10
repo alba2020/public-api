@@ -1,7 +1,5 @@
 version: '3'
 services:
-
-  #PHP Service
   api_application:
     build:
       context: .
@@ -12,27 +10,28 @@ services:
     tty: true
     ports:
       - "9000:9000"
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
        - ./:/var/www
        - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    command:
+      "php-fpm"
     networks:
       - backend_net
 
-  api_queue:
+  queue_fake:
     build:
       context: .
-      dockerfile: docker/queue.Dockerfile
-    image: alba2020/queue
-    container_name: api_queue
+      dockerfile: docker/php.Dockerfile
+    image: alba2020/php
+    container_name: queue_fake
     restart: unless-stopped
     tty: true
     working_dir: /var/www
     volumes:
       - ./:/var/www
+    command:
+      "php artisan queue:work --queue=fake"
     networks:
       - backend_net
 
