@@ -1,5 +1,6 @@
 <?php
 
+use App\Role\UserRole;
 use App\User;
 use Illuminate\Database\Seeder;
 
@@ -90,6 +91,30 @@ class UsersTableSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@admin.panel',
             'password' => bcrypt('secret'),
+        ]);
+
+        User::create([
+            'id' => 1001,
+            'name' => 'admin',
+            'password' => bcrypt('secret'),
+            'email' => 'admin@smm.example.com',
+            'roles' => [UserRole::ROLE_ADMIN],
+        ]);
+
+        User::create([
+            'id' => 1002,
+            'name' => 'manager',
+            'password' => bcrypt('secret'),
+            'email' => 'manager@smm.example.com',
+            'roles' => [UserRole::ROLE_MANAGER],
+        ]);
+
+        User::create([
+            'id' => 1003,
+            'name' => 'blogger',
+            'password' => bcrypt('secret'),
+            'email' => 'blogger@smm.example.com',
+            'roles' => [UserRole::ROLE_BLOGGER, UserRole::ROLE_SEO],
         ]);
 
 //        factory(User::class, 8)->create();

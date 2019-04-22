@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\CheckUserRole;
+use App\Role\RoleChecker;
 use App\Services\FakeService;
 use App\Services\FBService;
 use App\Services\NakrutkaService;
 use App\Services\VKService;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App;
@@ -42,6 +45,12 @@ class AppServiceProvider extends ServiceProvider
 
         app()->bind(NakrutkaService::class, function() {
             return new NakrutkaService(config('services.nakrutka'));
+        });
+
+        $this->app->singleton(CheckUserRole::class, function(Application $app) {
+            return new CheckUserRole(
+                $app->make(RoleChecker::class)
+            );
         });
     }
 

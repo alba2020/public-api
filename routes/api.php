@@ -1,5 +1,6 @@
 <?php
 
+use App\Role\UserRole;
 use Illuminate\Http\Request;
 
 /*
@@ -42,6 +43,21 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // ----------------- fakes ---------------
     Route::get('fakes', 'API\FakesController@index');
+
+    // -- roles --
+
+    Route::get('support', function() {
+        return response()->json([
+            'msg' => 'support text'
+        ]);
+    })->middleware('check_user_role:' . UserRole::ROLE_SUPPORT);
+
+    Route::get('blog', function() {
+        return response()->json([
+            'msg' => 'blog text'
+        ]);
+    })->middleware('check_user_role:' . UserRole::ROLE_BLOGGER);
+
 });
 
 
