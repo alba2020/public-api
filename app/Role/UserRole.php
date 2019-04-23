@@ -13,7 +13,6 @@ class UserRole {
     const ROLE_BLOGGER = 'ROLE_BLOGGER';
     const ROLE_SUPPORT = 'ROLE_SUPPORT';
     const ROLE_VERIFIED = 'ROLE_VERIFIED';
-    const ROLE_NOT_VERIFIED = 'ROLE_NOT_VERIFIED';
     const ROLE_SEO = 'ROLE_SEO';
 
     /**
@@ -41,8 +40,6 @@ class UserRole {
         ],
 
         self::ROLE_VERIFIED => [],
-
-        self::ROLE_NOT_VERIFIED => [],
     ];
 
     public static function getRoles(string $role, array $known_roles = [])

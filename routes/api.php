@@ -21,6 +21,11 @@ use Illuminate\Http\Request;
 
 Route::post('login', 'API\UserController@login');
 Route::post('register', 'API\UserController@register');
+Route::get('confirm/{confirmationCode}', 'API\UserController@confirm')
+            ->name('confirmation_path');
+Route::post('reset', 'API\UserController@reset');
+Route::post('set_password', 'API\UserController@setPassword');
+
 
 Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------
