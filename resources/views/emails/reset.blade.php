@@ -8,7 +8,9 @@
 
 <div>
     Please follow the link below to reset your password
-    {{ URL::to('/reset/' . $reset_code) }}.<br/>
+    <a href="{{ env('APP_URL') . '/reset/' . $reset_code }}">
+        {{ env('APP_URL') . '/reset/' . $reset_code }}
+    </a>.<br/>
 </div>
 
 </body>
