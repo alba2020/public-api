@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="23f21c9c-5e1a-4ea1-8782-73edb22ea271" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/emails/reset.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/emails/reset.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/emails/verify.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/emails/verify.blade.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -65,14 +66,23 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="api.php" pinned="false" current-in-tab="true">
+          <file leaf-file-name="api.php" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/routes/api.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="459">
-                  <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+                <state relative-caret-position="850">
+                  <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
                   <folding>
                     <element signature="e#7#29#0#PHP" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="verify.blade.php" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/resources/views/emails/verify.blade.php">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="187">
+                  <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
                 </state>
               </provider>
             </entry>
@@ -131,11 +141,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="reset.blade.php" pinned="false" current-in-tab="false">
+          <file leaf-file-name="reset.blade.php" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/resources/views/emails/reset.blade.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="289">
-                  <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+                <state relative-caret-position="204">
+                  <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
                 </state>
               </provider>
             </entry>
@@ -251,13 +261,13 @@
         <option value="$PROJECT_DIR$/app/Role/UserRole.php" />
         <option value="$PROJECT_DIR$/app/Mail/VerifyEmail.php" />
         <option value="$PROJECT_DIR$/.env" />
-        <option value="$PROJECT_DIR$/resources/views/emails/verify.blade.php" />
         <option value="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" />
         <option value="$PROJECT_DIR$/routes/api.php" />
         <option value="$PROJECT_DIR$/app/Mail/ResetEmail.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/resources/views/emails/reset.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/API/UserController.php" />
+        <option value="$PROJECT_DIR$/resources/views/emails/verify.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/emails/reset.blade.php" />
       </list>
     </option>
   </component>
@@ -528,12 +538,12 @@
       <workItem from="1554398713104" duration="704000" />
       <workItem from="1554491989202" duration="533000" />
       <workItem from="1554754328316" duration="8675000" />
-      <workItem from="1555890359789" duration="29282000" />
+      <workItem from="1555890359789" duration="29995000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="242697000" />
+    <option name="totallyTimeSpent" value="243410000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -858,13 +868,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/emails/verify.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Mail/VerifyEmail.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
@@ -883,13 +886,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="791">
           <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/emails/reset.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
@@ -937,20 +933,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/api.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        <state relative-caret-position="850">
+          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
           <folding>
             <element signature="e#7#29#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php">
+    <entry file="file://$PROJECT_DIR$/resources/views/emails/verify.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
-          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+        <state relative-caret-position="187">
+          <caret line="11" column="16" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/emails/reset.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>

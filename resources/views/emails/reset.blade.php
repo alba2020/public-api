@@ -8,9 +8,7 @@
 
 <div>
     Please follow the link below to reset your password
-{{--    {{ URL::to('api/confirm/' . $confirmation_code) }}.<br/>--}}
-    {{--/api/set_password--}}
-        {{ $reset_code }}
+    {{ URL::to('/reset/' . $reset_code) }}.<br/>
 </div>
 
 </body>
