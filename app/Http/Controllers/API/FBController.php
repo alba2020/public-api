@@ -30,11 +30,21 @@ class FBController extends Controller {
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $confirm = $fb->confirmToken($token->access_token, $token->access_token);
+        // owner or developer of the app
+        // $confirm = $fb->confirmToken($token->access_token, $token->access_token);
+
+        $fb_data = $fb->getUserId($token->access_token);
+
+        if (!$fb_data) {
+            return response()->json([
+                'error' => 'Could not get fb user id.'
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         return response()->json([
             'token' => $token,
-            'confirm' => $confirm->data,
+//            'confirm' => $confirm->data,
+            'fb_data' => $fb_data,
         ], Response::HTTP_OK);
     }
 }

@@ -51,4 +51,22 @@ class FBService
             )->getBody()->getContents();
         return json_decode($data);
     }
+
+    public function getUserId($access_token)
+    {
+        try {
+            $data = $this->httpClient
+                ->get('https://graph.facebook.com/me',
+                    [
+                        'query' => [
+                            'fields' => 'id',
+                            'access_token' => $access_token,
+                        ]
+                    ]
+                )->getBody()->getContents();
+        } catch (\Exception $ex) {
+            return null;
+        }
+        return json_decode($data);
+    }
 }
