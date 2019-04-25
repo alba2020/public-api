@@ -35,7 +35,7 @@ class FBController extends Controller {
 
         $fb_data = $fb->getUserId($token->access_token);
 
-        if (!$fb_data) {
+        if(!$fb_data) {
             return response()->json([
                 'error' => 'Could not get fb user id.'
             ], Response::HTTP_BAD_REQUEST);
