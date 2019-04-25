@@ -23,6 +23,13 @@ class FBController extends Controller {
         }
 
         $token = $fb->getToken($request->post('code'));
+
+        if(!$token) {
+            return response()->json([
+                'error' => 'Could not get fb access token.'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $confirm = $fb->confirmToken($token->access_token, $token->access_token);
 
         return response()->json([

@@ -24,6 +24,12 @@ class VKController extends Controller {
 
         $vk_response = $vk->getToken($request->post('code'));
 
-        return response()->json($vk_response, Response::HTTP_OK);
+        if(!$vk_response) {
+            return response()->json([
+                'error' => 'Could not get vk access token.'
+            ], Response::HTTP_BAD_REQUEST);
+        } else {
+            return response()->json($vk_response, Response::HTTP_OK);
+        }
     }
 }

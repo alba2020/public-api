@@ -19,6 +19,7 @@ class FBService
 
     public function getToken($code)
     {
+        try {
         $fb_token = $this->httpClient
             ->get('https://graph.facebook.com/v3.2/oauth/access_token',
                 [
@@ -30,6 +31,9 @@ class FBService
                     ]
                 ]
             )->getBody()->getContents();
+        } catch (\Exception $ex) {
+            return null;
+        }
 
         return json_decode($fb_token);
     }

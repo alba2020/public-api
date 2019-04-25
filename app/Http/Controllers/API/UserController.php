@@ -102,6 +102,13 @@ class UserController extends Controller {
                 Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $userExists = User::where('email', $request->email)->first();
+        if ($userExists) {
+            return response()->json([
+                'error' => 'User exists.'
+            ], Response::HTTP_CONFLICT);
+        }
+
 //        $input = $request->all();
 //        $input['password'] = bcrypt($input['password']);
 //        $user = User::create($input);

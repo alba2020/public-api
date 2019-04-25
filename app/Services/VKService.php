@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Symfony\Component\HttpFoundation\Response;
 
 class VKService
 {
@@ -32,10 +33,8 @@ class VKService
                     ]
                 )->getBody()->getContents();
 
-        } catch (GuzzleException $ex) {
-//            return response()->json([
-//                'message' => 'guzzle error'
-//            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (\Exception $ex) {
+            return null;
         }
 
         return json_decode($vk_response);
