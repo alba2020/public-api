@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Status extends Model
 {
     // jobs
-    const CREATED = 1;
-    const RUNNING = 2;
-    const COMPLETED = 4;
-    const ERROR = 8;
+    const CREATED = 'CREATED';
+    const RUNNING = 'RUNNING';
+    const COMPLETED = 'COMPLETED';
+    const ERROR = 'ERROR';
 
     // bots
-    const BOT_OK = 16;
-    const BOT_ERROR = 32;
+    const BOT_OK = 'BOT_OK';
+    const BOT_ERROR = 'BOT_ERROR';
+    const BOT_UNKNOWN = 'BOT_UNKNOWN';
 }

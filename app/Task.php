@@ -6,28 +6,23 @@ use App\Jobs\ActionJob;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\CreateActionsException;
 
-class Task extends Model
-{
+class Task extends Model {
     protected $guarded = [];
 
-    public function owner()
-    {
+    public function owner() {
         return $this->belongsTo('App\User', 'owner_id');
     }
 
-    public function actions()
-    {
+    public function actions() {
         return $this->hasMany('App\Action');
     }
 
-    public function comments()
-    {
+    public function comments() {
         return $this->hasMany('App\Comment');
     }
 
     /* @throws \App\Exceptions\CreateActionsException */
-    public function createActions()
-    {
+    public function createActions() {
         if ($this->platform == 'fake') {
             $workers = User::fakeWorkers($this)
                 ->inRandomOrder()
@@ -40,8 +35,7 @@ class Task extends Model
                 ->take($this->n)
                 ->get()
                 ->all();
-        }
-        else {
+        } else {
             throw new CreateActionsException('unknown platform');
         }
 
@@ -49,7 +43,7 @@ class Task extends Model
             throw new CreateActionsException('not enough workers');
         }
 
-        foreach($workers as $worker) {
+        foreach ($workers as $worker) {
             Action::create([
                 'task_id' => $this->id,
                 'worker_id' => $worker->id,
@@ -58,11 +52,10 @@ class Task extends Model
         }
     }
 
-    public function getIncompleteActions()
-    {
+    public function getIncompleteActions() {
         //todo optimize
         $res = 0;
-        foreach($this->actions as $a) {
+        foreach ($this->actions as $a) {
             if ($a->status != Status::COMPLETED) {
                 $res++;
             }
@@ -77,8 +70,7 @@ class Task extends Model
      * @param string $type
      * @return int
      */
-    public static function run($platform, $type='')
-    {
+    public static function run($platform, $type = '') {
         // todo optimize one sql request
         if ($type) {
             $tasks = Task::where('platform', $platform)
@@ -94,8 +86,8 @@ class Task extends Model
         }
 
         $n = 0;
-        foreach($tasks as $task) {
-            foreach($task->actions as $action) {
+        foreach ($tasks as $task) {
+            foreach ($task->actions as $action) {
                 // queue name = platform
                 ActionJob::dispatch($action)->onQueue($task->platform);
                 $n++;

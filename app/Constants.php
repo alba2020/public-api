@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Constants extends Model
 {
-    const INSTAGRAM = 'instagram';
-    const VK = 'vk';
-    const FAKE = 'fake';
+    const INSTAGRAM = 'INSTAGRAM';
+    const VK = 'VK';
+    const FAKE = 'FAKE';
+    const NOT_SET = 'NOT_SET';
 }

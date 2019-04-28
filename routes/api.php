@@ -19,36 +19,43 @@ use Illuminate\Http\Request;
 //});
 
 
-Route::post('login', 'API\UserController@login');
-Route::post('register', 'API\UserController@register');
+Route::post('login', 'UserController@login');
+Route::post('register', 'UserController@register');
 Route::get('confirm/{confirmationCode}', 'API\UserController@confirm')
             ->name('confirmation_path');
-Route::post('reset', 'API\UserController@reset');
-Route::post('set_password', 'API\UserController@setPassword');
+Route::post('reset', 'UserController@reset');
+Route::post('set_password', 'UserController@setPassword');
 
 
 Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------
-    Route::get('user', 'API\UserController@details');
-    Route::post('logout', 'API\UserController@logout');
-    Route::get('users', 'API\UserController@index');
+    Route::get('user', 'UserController@details');
+    Route::post('logout', 'UserController@logout');
+
+    Route::group([
+        'middleware' => 'check_user_role:' . UserRole::ROLE_MODERATOR],
+        function() {
+            Route::get('users', 'UserController@index');
+        });
+
+    Route::get('users/{user}/bots', 'UserController@bots');
 
     // --------------- tasks -------------------
-    Route::get('tasks', 'API\TasksController@index');
-    Route::get('tasks/{task}', 'API\TasksController@show');
-    Route::post('tasks', 'API\TasksController@store');
-    Route::put('tasks/{tasks}', 'API\TasksController@update');
-    Route::delete('tasks/{task}', 'API\TasksController@delete');
+    Route::get('tasks', 'TasksController@index');
+    Route::get('tasks/{task}', 'TasksController@show');
+    Route::post('tasks', 'TasksController@store');
+    Route::put('tasks/{tasks}', 'TasksController@update');
+    Route::delete('tasks/{task}', 'TasksController@delete');
 
 //    Route::post('tasks/run/fake', 'API\TasksController@runFake');
 //    Route::post('tasks/run/instagram', 'API\TasksController@runInstagram');
-    Route::post('tasks/run/{platform}', 'API\TasksController@runPlatform');
+    Route::post('tasks/run/{platform}', 'TasksController@runPlatform');
 
-    Route::post('tasks/reset', 'API\TasksController@resetAll');
-    Route::post('tasks/undo/{task}', 'API\TasksController@undo');
+    Route::post('tasks/reset', 'TasksController@resetAll');
+    Route::post('tasks/undo/{task}', 'TasksController@undo');
 
     // ----------------- fakes ---------------
-    Route::get('fakes', 'API\FakesController@index');
+    Route::get('fakes', 'FakesController@index');
 
     // -- roles --
 
@@ -75,8 +82,8 @@ Route::get('cat', function() {
 });
 
 
-Route::post('vk/token', 'API\VKController@token');
-Route::post('fb/token', 'API\FBController@token');
+Route::post('vk/token', 'VKController@token');
+Route::post('fb/token', 'FBController@token');
 
 
 Route::get('/nakrutka', function(Request $request, \App\Services\NakrutkaService $nakrutka) {

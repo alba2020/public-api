@@ -17,7 +17,7 @@ class CreateActionsTable extends Migration
             $table->increments('id');
             $table->integer('task_id');
             $table->integer('worker_id');
-            $table->integer('status');
+            $table->string('status');
             $table->string('instagram_comment_id')->nullable(); // for undo
             $table->timestamps();
         });

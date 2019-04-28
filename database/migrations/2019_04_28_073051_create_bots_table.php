@@ -1,5 +1,7 @@
 <?php
 
+use App\Constants;
+use App\Status;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -16,15 +18,15 @@ class CreateBotsTable extends Migration
         Schema::create('bots', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('platform');
+            $table->string('platform')->default(Constants::NOT_SET);
             $table->string('login');
             $table->string('password');
 
-            $table->integer('status');
-            $table->boolean('approved');
+            $table->string('status')->default(Status::BOT_UNKNOWN);
+            $table->boolean('approved')->default('0');
 
-            $table->integer('proxy_id');
-            $table->integer('user_id');
+            $table->integer('proxy_id')->nullable();
+            $table->integer('user_id')->nullable();
 
             $table->timestamps();
         });

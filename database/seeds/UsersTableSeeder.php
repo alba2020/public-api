@@ -102,6 +102,30 @@ class UsersTableSeeder extends Seeder
             'roles' => [UserRole::ROLE_MODERATOR],
         ]);
 
+        User::create([
+            'id' => 101,
+            'name' => 'user1',
+            'password' => bcrypt('secret'),
+            'email' => 'user1@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
+        ]);
+
+        User::create([
+            'id' => 102,
+            'name' => 'user2',
+            'password' => bcrypt('secret'),
+            'email' => 'user2@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
+        ]);
+
+        User::create([
+            'id' => 103,
+            'name' => 'user3',
+            'password' => bcrypt('secret'),
+            'email' => 'user3@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
+        ]);
+
 //        factory(User::class, 8)->create();
     }
 }

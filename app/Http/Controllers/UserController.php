@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Mail\VerifyEmail;
 use App\Mail\ResetEmail;
@@ -204,6 +204,10 @@ class UserController extends Controller {
 
     public function index() {
         return User::all();
+    }
+
+    public function bots(User $user) {
+        return $user->bots()->get()->all();
     }
 
     /**
