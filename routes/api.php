@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------
     Route::get('user', 'API\UserController@details');
     Route::post('logout', 'API\UserController@logout');
+    Route::get('users', 'API\UserController@index');
 
     // --------------- tasks -------------------
     Route::get('tasks', 'API\TasksController@index');
@@ -51,17 +52,17 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // -- roles --
 
-    Route::get('support', function() {
-        return response()->json([
-            'msg' => 'support text'
-        ]);
-    })->middleware('check_user_role:' . UserRole::ROLE_SUPPORT);
-
-    Route::get('blog', function() {
-        return response()->json([
-            'msg' => 'blog text'
-        ]);
-    })->middleware('check_user_role:' . UserRole::ROLE_BLOGGER);
+//    Route::get('support', function() {
+//        return response()->json([
+//            'msg' => 'support text'
+//        ]);
+//    })->middleware('check_user_role:' . UserRole::ROLE_SUPPORT);
+//
+//    Route::get('blog', function() {
+//        return response()->json([
+//            'msg' => 'blog text'
+//        ]);
+//    })->middleware('check_user_role:' . UserRole::ROLE_BLOGGER);
 
 });
 

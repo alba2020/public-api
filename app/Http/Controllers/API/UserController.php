@@ -202,6 +202,10 @@ class UserController extends Controller {
         ], Response::HTTP_OK);
     }
 
+    public function index() {
+        return User::all();
+    }
+
     /**
      * details api
      *
