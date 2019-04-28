@@ -14,28 +14,17 @@ class UserRole {
     const ROLE_SUPPORT = 'ROLE_SUPPORT';
     const ROLE_VERIFIED = 'ROLE_VERIFIED';
     const ROLE_SEO = 'ROLE_SEO';
+    const ROLE_MODERATOR = 'ROLE_MODERATOR';
 
     /**
      * @var array
      */
     protected static $roleHierarchy = [
         self::ROLE_ADMIN => [
-            self::ROLE_MANAGER,
-            self::ROLE_SEO
+            self::ROLE_MODERATOR,
         ],
 
-        self::ROLE_MANAGER => [
-            self::ROLE_BLOGGER,
-            self::ROLE_SUPPORT,
-        ],
-
-        self::ROLE_BLOGGER => [
-            self::ROLE_VERIFIED,
-        ],
-
-        self::ROLE_SEO => [],
-
-        self::ROLE_SUPPORT => [
+        self::ROLE_MODERATOR => [
             self::ROLE_VERIFIED,
         ],
 
