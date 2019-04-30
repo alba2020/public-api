@@ -88,33 +88,42 @@ class UsersTableSeeder extends Seeder
 
         User::create([
             'id' => 1000,
-            'name' => 'Administrator',
-            'email' => 'admin@admin.panel',
-            'password' => bcrypt('secret'),
-        ]);
-
-        User::create([
-            'id' => 1001,
             'name' => 'admin',
-            'password' => bcrypt('secret'),
             'email' => 'admin@smm.example.com',
+            'password' => bcrypt('secret'),
             'roles' => [UserRole::ROLE_ADMIN],
         ]);
 
         User::create([
-            'id' => 1002,
-            'name' => 'manager',
+            'id' => 1001,
+            'name' => 'moder',
             'password' => bcrypt('secret'),
-            'email' => 'manager@smm.example.com',
-            'roles' => [UserRole::ROLE_MANAGER],
+            'email' => 'moder@smm.example.com',
+            'roles' => [UserRole::ROLE_MODERATOR],
         ]);
 
         User::create([
-            'id' => 1003,
-            'name' => 'blogger',
+            'id' => 101,
+            'name' => 'user1',
             'password' => bcrypt('secret'),
-            'email' => 'blogger@smm.example.com',
-            'roles' => [UserRole::ROLE_BLOGGER, UserRole::ROLE_SEO],
+            'email' => 'user1@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
+        ]);
+
+        User::create([
+            'id' => 102,
+            'name' => 'user2',
+            'password' => bcrypt('secret'),
+            'email' => 'user2@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
+        ]);
+
+        User::create([
+            'id' => 103,
+            'name' => 'user3',
+            'password' => bcrypt('secret'),
+            'email' => 'user3@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
         ]);
 
 //        factory(User::class, 8)->create();

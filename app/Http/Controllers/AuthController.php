@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Mail\VerifyEmail;
 use App\Mail\ResetEmail;
+use App\Mail\VerifyEmail;
 use App\Role\UserRole;
 use App\Services\SMMAuthService;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-
-class UserController extends Controller {
+class AuthController extends Controller {
 
     /**
      * login api
@@ -47,7 +45,7 @@ class UserController extends Controller {
                 return response()->json(['error' => 'Email authorization error'], Response::HTTP_UNAUTHORIZED);
             }
 
-        // login with vk token
+            // login with vk token
         } else if($request->vk_id && $request->vk_token) {
 
             $vkValidator = Validator::make($request->all(), [
@@ -200,16 +198,6 @@ class UserController extends Controller {
         return response()->json([
             'success' => 'Password changed.'
         ], Response::HTTP_OK);
-    }
-
-    /**
-     * details api
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function details() {
-        $user = Auth::user();
-        return response()->json(['success' => $user], Response::HTTP_OK);
     }
 
     public function logout() {
