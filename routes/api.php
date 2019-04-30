@@ -19,26 +19,27 @@ use Illuminate\Http\Request;
 //});
 
 
-Route::post('login', 'UserController@login');
-Route::post('register', 'UserController@register');
-Route::get('confirm/{confirmationCode}', 'API\UserController@confirm')
+Route::post('login', 'AuthController@login');
+Route::post('register', 'AuthController@register');
+Route::get('confirm/{confirmationCode}', 'AuthController@confirm')
             ->name('confirmation_path');
-Route::post('reset', 'UserController@reset');
-Route::post('set_password', 'UserController@setPassword');
+Route::post('reset', 'AuthController@reset');
+Route::post('set_password', 'AuthController@setPassword');
 
+Route::get('services', 'ServicesController@index');
+Route::get('services/cost/{service_id}/{n}', 'ServicesController@cost');
 
 Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------
     Route::get('user', 'UserController@details');
-    Route::post('logout', 'UserController@logout');
+    Route::post('logout', 'AuthController@logout');
 
-    Route::group([
-        'middleware' => 'check_user_role:' . UserRole::ROLE_MODERATOR],
+    Route::group(['middleware' => 'check_user_role:' . UserRole::ROLE_MODERATOR],
         function() {
             Route::get('users', 'UserController@index');
         });
 
-    Route::get('users/{user}/bots', 'UserController@bots');
+    Route::get('users/{id}/bots', 'UserController@bots');
 
     // --------------- tasks -------------------
     Route::get('tasks', 'TasksController@index');
@@ -72,7 +73,6 @@ Route::group(['middleware' => 'auth:api'], function() {
 //    })->middleware('check_user_role:' . UserRole::ROLE_BLOGGER);
 
 });
-
 
 Route::get('cat', function() {
     return response()->json([

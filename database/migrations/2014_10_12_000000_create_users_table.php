@@ -37,6 +37,8 @@ class CreateUsersTable extends Migration
             $table->integer('instagram_proxy_id')->nullable();
 
             $table->text('roles')->nullable();
+
+            $table->decimal('balance', 19, 4)->default('0.00');
         });
     }
 
