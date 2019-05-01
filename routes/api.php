@@ -27,7 +27,9 @@ Route::post('reset', 'AuthController@reset');
 Route::post('set_password', 'AuthController@setPassword');
 
 Route::get('services', 'ServicesController@index');
-Route::get('services/cost/{service_id}/{n}', 'ServicesController@cost');
+Route::get('services/{service_id}/cost/{n}', 'ServicesController@cost');
+Route::post('services/costs', 'ServicesController@costs');
+
 
 Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------

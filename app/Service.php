@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Exceptions\CostException;
 use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model {
@@ -25,5 +26,38 @@ class Service extends Model {
         } else {
             return null;
         }
+    }
+
+    /**
+     * @param $service
+     * @param $n
+     * @throws CostException
+     */
+    public static function getCost($service, $n) {
+        if (!$service) {
+            throw new CostException("service not found");
+        }
+
+        if ($n < $service->min || $n > $service->max) {
+            throw new CostException(
+                "n must be in [$service->min, $service->max], but was $n");
+        }
+
+        $price = $service->getPrice($n);
+        if (!$price) {
+            throw new CostException("bad price: $price, n: $n");
+        }
+
+        $cost = $price * $n;
+        $full_cost = $service->getPrice(1) * $n;
+        $economy = $full_cost - $cost;
+
+        return [
+            'service_id' => $service->id,
+            'service_type' => $service->type,
+            'n' => $n,
+            'cost' => round($cost, 2, PHP_ROUND_HALF_DOWN),
+            'economy' => round($economy, 2, PHP_ROUND_HALF_DOWN),
+        ];
     }
 }
