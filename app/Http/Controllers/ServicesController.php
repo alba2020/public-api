@@ -60,12 +60,13 @@ class ServicesController extends Controller {
 
                 return Service::getCost($service, $param->n);
             }, $params);
+            return response()->json([
+                'success' => $res,
+            ], Response::HTTP_OK);
         } catch (CostException $e) {
-            $res = [
+            return response()->json([
                 'error' => $e->getMessage(),
-            ];
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-        return $res;
     }
 }
