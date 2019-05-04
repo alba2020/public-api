@@ -9,8 +9,8 @@
 <div>
     Thanks for creating an account with the verification demo app.
     Please follow the link below to verify your email address
-    <a href="{{ env('APP_URL') . '/confirm/' . $confirmation_code }}">
-        {{ env('APP_URL') . '/confirm/' . $confirmation_code }}
+    <a href="{{ env('APP_URL') . '/signup/' . $confirmation_code }}">
+        {{ env('APP_URL') . '/signup/' . $confirmation_code }}
     </a>.<br/>
 {{--    {{ $confirmation_code }}--}}
 </div>
