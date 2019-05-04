@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\EmailAuthorizationException;
+use App\Exceptions\EmailExistsException;
+use App\Exceptions\FBAuthorizationException;
+use App\Exceptions\InvalidCodeException;
+use App\Exceptions\MissingParameterException;
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\VKAuthorizationException;
 use App\Mail\ResetEmail;
 use App\Mail\VerifyEmail;
 use App\Role\UserRole;
 use App\Services\SMMAuthService;
+use App\SMM;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
+
 
 class AuthController extends Controller {
 
@@ -21,90 +29,100 @@ class AuthController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function login(Request $request, SMMAuthService $smmAuth) {
-
-//        if ($request->foo) {
-//            return response()->json(['message' => 'foo found ' . $request->foo]);
-//        } else {
-//            return response()->json(['message' => 'foo not found']);
-//        }
-
         // login with email
         if ($request->email && $request->password) {
-            $emailValidator = Validator::make($request->all(), [
+            SMM::validate($request, [
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-            if ($emailValidator->fails()) {
-                return response()->json(['error' => $emailValidator->errors()],
-                    Response::HTTP_UNAUTHORIZED);
-            }
 
             if ($token = $smmAuth->loginWithEmail($request->email, $request->password)) {
                 return response()->json(['token' => $token], Response::HTTP_OK);
             } else {
-                return response()->json(['error' => 'Email authorization error'], Response::HTTP_UNAUTHORIZED);
+                throw EmailAuthorizationException::create();
             }
 
             // login with vk token
         } else if($request->vk_id && $request->vk_token) {
-
-            $vkValidator = Validator::make($request->all(), [
+            SMM::validate($request, [
                 'vk_id' => 'required',
                 'vk_token' => 'required'
             ]);
-            if($vkValidator->fails()) {
-                return response()->json(['error' => $vkValidator->errors()],
-                    Response::HTTP_UNAUTHORIZED);
-            }
 
             if ($token = $smmAuth->loginWithVK($request->vk_id, $request->vk_token)) {
                 return response()->json(['token' => $token], Response::HTTP_OK);
             } else {
-                return response()->json(['error' => 'VK authorization error'], Response::HTTP_UNAUTHORIZED);
+                throw VKAuthorizationException::create();
             }
 
         } else if($request->fb_id && $request->fb_token) {
-            $fbValidator = Validator::make($request->all(), [
+            SMM::validate($request, [
                 'fb_id' => 'required',
                 'fb_token' => 'required'
             ]);
-            if($fbValidator->fails()) {
-                return response()->json(['error' => $fbValidator->errors()],
-                    Response::HTTP_UNAUTHORIZED);
-            }
 
             if ($token = $smmAuth->loginWithFB($request->fb_id, $request->fb_token)) {
                 return response()->json(['token' => $token], Response::HTTP_OK);
             } else {
-                return response()->json(['error' => 'FB authorization error'], Response::HTTP_UNAUTHORIZED);
+                throw FBAuthorizationException::create();
             }
         } else {
             return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
     }
 
+    public function loginWithEmail(Request $request, SMMAuthService $smmAuth) {
+        SMM::validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if ($token = $smmAuth->loginWithEmail($request->email, $request->password)) {
+            return response()->json(['token' => $token], Response::HTTP_OK);
+        } else {
+            throw EmailAuthorizationException::create();
+        }
+    }
+
+    public function loginWithVK(Request $request, SMMAuthService $smmAuth) {
+        SMM::validate($request, [
+            'vk_id' => 'required',
+            'vk_token' => 'required'
+        ]);
+
+        if ($token = $smmAuth->loginWithVK($request->vk_id, $request->vk_token)) {
+            return response()->json(['token' => $token], Response::HTTP_OK);
+        } else {
+            throw VKAuthorizationException::create();
+        }
+    }
+
+    public function loginWithFB(Request $request, SMMAuthService $smmAuth) {
+        SMM::validate($request, [
+            'fb_id' => 'required',
+            'fb_token' => 'required'
+        ]);
+
+        if ($token = $smmAuth->loginWithFB($request->fb_id, $request->fb_token)) {
+            return response()->json(['token' => $token], Response::HTTP_OK);
+        } else {
+            throw FBAuthorizationException::create();
+        }
+    }
     /**
      * Register api
      *
      * @return \Illuminate\Http\Response
      */
     public function register(Request $request) {
-        $validator = Validator::make($request->all(), [
+        SMM::validate($request, [
             'email' => 'required|email',
             'password' => 'required',
             'password_confirm' => 'required|same:password',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()],
-                Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $userExists = User::where('email', $request->email)->first();
-        if ($userExists) {
-            return response()->json([
-                'error' => 'User exists.'
-            ], Response::HTTP_CONFLICT);
+        if (User::where('email', $request->email)->first()) {
+            throw EmailExistsException::create();
         }
 
 //        $input = $request->all();
@@ -129,12 +147,12 @@ class AuthController extends Controller {
 
     public function confirm($confirmation_code) {
         if (!$confirmation_code) {
-            return response()->json([ 'error' => 'No confirmation code' ]);
+            throw MissingParameterException::create(['parameter' => 'confirmation_code']);
         }
 
         $user = User::where('confirmation_code', $confirmation_code)->first();
         if (!$user) {
-            return response()->json([ 'error' => 'Invalid confirmation code' ]);
+            throw InvalidCodeException::create(['text' => 'Invalid confirmation code']);
         }
 
         $user->addRole(UserRole::ROLE_VERIFIED);
@@ -147,20 +165,13 @@ class AuthController extends Controller {
     }
 
     public function reset(Request $request) {
-        $validator = Validator::make($request->all(), [
+        SMM::validate($request, [
             'email' => 'required|email',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()],
-                Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return response()->json([
-                'error' => 'Email not found'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            throw UserNotFoundException::create(['text' => 'User not found by email']);
         }
 
         $reset_code = str_random(30);
@@ -175,20 +186,15 @@ class AuthController extends Controller {
     }
 
     public function setPassword(Request $request) {
-        $validator = Validator::make($request->all(), [
+        SMM::validate($request, [
             'reset_code' => 'required',
             'password' => 'required',
             'password_confirm' => 'required|same:password',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()],
-                Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
         $user = User::where('reset_code', $request->reset_code)->first();
         if (!$user) {
-            return response()->json([ 'error' => 'Invalid reset code' ]);
+            throw InvalidCodeException::create(['text' => 'Invalid reset code']);
         }
 
         $user->password = bcrypt($request->password);

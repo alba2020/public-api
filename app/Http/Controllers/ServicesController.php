@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CostException;
+use App\Exceptions\EntityNotFoundException;
 use App\Service;
+use App\SMM;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServicesController extends Controller {
 
@@ -10,41 +16,51 @@ class ServicesController extends Controller {
         return Service::all();
     }
 
+    /**
+     * @param $service_id
+     * @param $n
+     * @return \Illuminate\Http\JsonResponse
+     * @throws CostException
+     */
     public function cost($service_id, $n) {
         $service = Service::find($service_id);
         if(!$service) {
-            return response()->json([
-                'error' => 'service not found'
-            ]);
+            throw EntityNotFoundException::create(['text' => 'Service not found']);
         }
-
-        if ($n < $service->min || $n > $service->max) {
-            return response()->json([
-                'error' => 'n must be between ' . $service->min . ' and ' . $service->max,
-                'n' => $n,
-            ]);
-        }
-
-        $price = $service->getPrice($n);
-        if (!$price) {
-            return response()->json([
-                'error' => 'bad price',
-                'price' => $price,
-                'n' => $n,
-            ]);
-        }
-        $cost = $price * $n;
-        $full_cost = $service->getPrice(1) * $n;
-        $economy = $full_cost - $cost;
 
         return response()->json([
-            'success' => [
-                'service id' => $service->id,
-                'service type' => $service->type,
-                'n' => $n,
-                'cost' => round($cost, 2, PHP_ROUND_HALF_DOWN),
-                'economy' => round($economy, 2, PHP_ROUND_HALF_DOWN),
-            ]
+            'success' => Service::getCost($service, $n),
         ]);
+    }
+
+
+    /**
+     * @param $paramsJson [{service_id: 1, n: 200}, {service_id: 2, n: 300}]
+     */
+    public function costs(Request $request) {
+        SMM::validate($request, [
+            'params' => 'required|json',
+        ]);
+
+        $params = json_decode($request->params);
+        $servicesIds = array_map(function($x){ return $x->service_id; }, $params);
+        $services = Service::whereIn('id', $servicesIds)->get()->all();
+
+        $res = array_map(function($param) use (&$services) {
+            $service = current(array_filter($services, function($service) use($param) {
+                return $service->id === $param->service_id;
+            }));
+
+            if(!$service) {
+                throw EntityNotFoundException::create([
+                    'text' => "Service not found: $param->service_id"]);
+            }
+
+            return Service::getCost($service, $param->n);
+        }, $params);
+
+        return response()->json([
+            'success' => $res,
+        ], Response::HTTP_OK);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Action;
 use App\Comment;
 use App\Exceptions\CreateActionsException;
-use App\Http\Controllers\Controller;
 use App\Services\FakeService;
 use App\Services\InstagramService;
 use App\Services\NakrutkaService;
@@ -13,9 +12,9 @@ use App\Status;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
-use Validator;
 
 class TasksController extends Controller
 {

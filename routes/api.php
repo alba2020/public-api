@@ -19,7 +19,11 @@ use Illuminate\Http\Request;
 //});
 
 
-Route::post('login', 'AuthController@login');
+Route::post('login', 'AuthController@login'); // deprecated
+Route::post('login/email', 'AuthController@loginWithEmail');
+Route::post('login/vk', 'AuthController@loginWithVK');
+Route::post('login/fb', 'AuthController@loginWithFB');
+
 Route::post('register', 'AuthController@register');
 Route::get('confirm/{confirmationCode}', 'AuthController@confirm')
             ->name('confirmation_path');
@@ -27,7 +31,9 @@ Route::post('reset', 'AuthController@reset');
 Route::post('set_password', 'AuthController@setPassword');
 
 Route::get('services', 'ServicesController@index');
-Route::get('services/cost/{service_id}/{n}', 'ServicesController@cost');
+Route::get('services/{service_id}/cost/{n}', 'ServicesController@cost');
+Route::post('services/costs', 'ServicesController@costs');
+
 
 Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------
@@ -81,6 +87,13 @@ Route::get('cat', function() {
     ], 200);
 });
 
+Route::get('excat', function() {
+//    throw new \App\Exceptions\CatException(1);
+    throw \App\Exceptions\CatException::create(['n' => 12]);
+//   return response()->json([
+//       'hello' => 'world',
+//   ]);
+});
 
 Route::post('vk/token', 'VKController@token');
 Route::post('fb/token', 'FBController@token');
