@@ -35,17 +35,18 @@ class Service extends Model {
      */
     public static function getCost($service, $n) {
         if (!$service) {
-            throw new CostException("service not found");
+            throw CostException::create(['text' => 'Service not found']);
         }
 
         if ($n < $service->min || $n > $service->max) {
-            throw new CostException(
-                "n must be in [$service->min, $service->max], but was $n");
+            throw CostException::create([
+                'text' => "n must be in [$service->min, $service->max], but was $n"
+            ]);
         }
 
         $price = $service->getPrice($n);
         if (!$price) {
-            throw new CostException("bad price: $price, n: $n");
+            throw CostException::create(['text' => "bad price: $price, n: $n"]);
         }
 
         $cost = $price * $n;
