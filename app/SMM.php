@@ -14,4 +14,8 @@ class SMM {
             throw ValidationException::create(['fields' => $v->errors()]);
         }
     }
+
+    public static function success($data) {
+        return response()->json(['success' => $data]);
+    }
 }
