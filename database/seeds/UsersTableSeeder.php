@@ -112,6 +112,7 @@ class UsersTableSeeder extends Seeder
         ]);
         $wallet1 = Wallet::create(['user_id' => $user1->id]);
         $user1->wallet_id = $wallet1->id;
+        $user1->save();
 
         $user2 = User::create([
             'id' => 102,
@@ -122,6 +123,7 @@ class UsersTableSeeder extends Seeder
         ]);
         $wallet2 = Wallet::create(['user_id' => $user2->id]);
         $user2->wallet_id = $wallet2->id;
+        $user2->save();
 
         $user3 = User::create([
             'id' => 103,
@@ -132,6 +134,7 @@ class UsersTableSeeder extends Seeder
         ]);
         $wallet3 = Wallet::create(['user_id' => $user3->id]);
         $user3->wallet_id = $wallet3->id;
+        $user3->save();
 
 //        factory(User::class, 8)->create();
     }

@@ -22,6 +22,23 @@ class UserController extends Controller {
         return $user->bots()->get()->all();
     }
 
+    public function orders($id) {
+        $user = User::find($id);
+        if(!$user) {
+            throw UserNotFoundException::create(['id' => $id]);
+        }
+        return $user->orders()->get()->all();
+    }
+
+    public function transactions($id) {
+        $user = User::find($id);
+        if(!$user) {
+            throw UserNotFoundException::create(['id' => $id]);
+        }
+        return $user->wallet->transactions;
+    }
+
+
     /**
      * details api
      *
@@ -29,6 +46,7 @@ class UserController extends Controller {
      */
     public function details() {
         $user = Auth::user();
+        $user->balance = $user->wallet->balance;
         return response()->json(['success' => $user], Response::HTTP_OK);
     }
 

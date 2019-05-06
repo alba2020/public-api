@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants;
 use App\Exceptions\EntityNotFoundException;
+use App\Exceptions\InsufficientFundsException;
 use App\Exceptions\MissingParameterException;
 use App\Exceptions\ServerException;
 use App\Order;
 use App\Service;
 use App\Services\NakrutkaService;
 use App\SMM;
+use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,10 +50,12 @@ class OrdersController extends Controller {
 
         $user = Auth::user();
 
-        // todo check balance
-
         $cost = $service->getCost($details->n);
+        $wallet = $user->wallet;
 
+        if ($wallet->balance < $cost) {
+            throw InsufficientFundsException::create();
+        }
 
         try {
             $order = Order::create([
@@ -65,8 +70,10 @@ class OrdersController extends Controller {
             throw ServerException::create(['text' => $e->getMessage()]);
         }
 
-        $user->balance -= $cost;
-        $user->save();
+//        $user->balance -= $cost;
+//        $user->save();
+
+        $wallet->applyTransaction(Constants::OUTFLOW_ORDER, (-1) * $cost, "Order $order->id");
 
         $nakrutka->setApiService($service->nakrutka_id);
         $nakrutka->add('ftp://bad_url' . $details->url, $details->n);

@@ -15,4 +15,5 @@ return [
     'entity_not_found' => 'Entity not found',
     'cost' => 'Could not compute service cost',
     'server' => 'Internal server error',
+    'insufficient_funds' => 'Insufficient funds'
 ];

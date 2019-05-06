@@ -50,6 +50,8 @@ Route::group(['middleware' => 'auth:api'], function() {
         });
 
     Route::get('users/{id}/bots', 'UserController@bots');
+    Route::get('users/{id}/orders', 'UserController@orders');
+    Route::get('users/{id}/transactions', 'UserController@transactions');
 
     // --------------- tasks -------------------
     Route::get('tasks', 'TasksController@index');

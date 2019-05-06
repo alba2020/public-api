@@ -20,6 +20,8 @@ class Constants extends Model
 
     const INFLOW_TEST = 'INFLOW_TEST';
     const INFLOW_OTHER = 'INFLOW_OTHER';
+
     const OUTFLOW_TEST = 'OUTFLOW_TEST';
     const OUTFLOW_OTHER = 'OUTFLOW_OTHER';
+    const OUTFLOW_ORDER = 'OUTFLOW_ORDER';
 }
