@@ -14,4 +14,5 @@ return [
     'user_not_found' => 'User not found',
     'entity_not_found' => 'Entity not found',
     'cost' => 'Could not compute service cost',
+    'server' => 'Internal server error',
 ];

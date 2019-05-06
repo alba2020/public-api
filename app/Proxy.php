@@ -2,10 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Proxy extends Model {
-    protected $guarded = [];
+class Proxy extends BaseModel {
 
     public function instagramUsers() {
         return $this->hasMany('App\User', 'instagram_proxy_id');

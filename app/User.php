@@ -48,12 +48,20 @@ class User extends Authenticatable {
         return $this->hasMany('App\Task', 'owner_id');
     }
 
+    public function orders() {
+        return $this->hasMany('App\Order');
+    }
+
     public function actions() {
         return $this->hasMany('App\Action', 'worker_id');
     }
 
     public function bots() {
         return $this->hasMany('App\Bot');
+    }
+
+    public function wallet() {
+        return $this->hasOne('App\Wallet')->withDefault();
     }
 
     public function scopeFakeWorkers($query, $task) {

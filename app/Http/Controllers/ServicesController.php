@@ -29,7 +29,7 @@ class ServicesController extends Controller {
         }
 
         return response()->json([
-            'success' => Service::getCost($service, $n),
+            'success' => Service::computeCost($service, $n),
         ]);
     }
 
@@ -56,7 +56,7 @@ class ServicesController extends Controller {
                     'text' => "Service not found: $param->service_id"]);
             }
 
-            return Service::getCost($service, $param->n);
+            return Service::computeCost($service, $param->n);
         }, $params);
 
         return response()->json([

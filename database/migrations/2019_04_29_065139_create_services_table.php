@@ -22,6 +22,8 @@ class CreateServicesTable extends Migration
             $table->integer('min');
             $table->integer('max');
 
+            $table->integer('nakrutka_id');
+
             $table->decimal('price', 19, 4);
             $table->decimal('price_1k', 19, 4);
             $table->decimal('price_5k', 19, 4);

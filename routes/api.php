@@ -40,6 +40,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('user', 'UserController@details');
     Route::post('logout', 'AuthController@logout');
 
+    Route::get('orders', 'OrdersController@index');
+    Route::post('orders', 'OrdersController@store');
+
+
     Route::group(['middleware' => 'check_user_role:' . UserRole::ROLE_MODERATOR],
         function() {
             Route::get('users', 'UserController@index');

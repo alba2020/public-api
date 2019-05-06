@@ -3,10 +3,12 @@
 namespace App;
 
 use App\Exceptions\CostException;
-use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model {
-    protected $guarded = [];
+class Service extends BaseModel {
+
+    public function orders() {
+        return $this->hasMany('App\Order');
+    }
 
     public function getPrice($n) {
         if ($n < 1000) {
@@ -29,11 +31,20 @@ class Service extends Model {
     }
 
     /**
+     * @param $n
+     * @return array
+     * @throws CostException
+     */
+    public function getCost($n): float {
+        return static::computeCost($this, $n)['cost'];
+    }
+
+    /**
      * @param $service
      * @param $n
      * @throws CostException
      */
-    public static function getCost($service, $n) {
+    public static function computeCost($service, $n): array {
         if (!$service) {
             throw CostException::create(['text' => 'Service not found']);
         }

@@ -2,14 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+class Comment extends BaseModel {
 
-class Comment extends Model
-{
-    protected $guarded = [];
-
-    public function task()
-    {
+    public function task() {
         return $this->belongsTo('App\Task');
     }
 }

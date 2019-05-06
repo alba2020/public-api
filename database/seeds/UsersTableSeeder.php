@@ -2,6 +2,7 @@
 
 use App\Role\UserRole;
 use App\User;
+use App\Wallet;
 use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
@@ -102,29 +103,35 @@ class UsersTableSeeder extends Seeder
             'roles' => [UserRole::ROLE_MODERATOR],
         ]);
 
-        User::create([
+        $user1 = User::create([
             'id' => 101,
             'name' => 'user1',
             'password' => bcrypt('secret'),
             'email' => 'user1@smm.example.com',
             'roles' => [UserRole::ROLE_VERIFIED],
         ]);
+        $wallet1 = Wallet::create(['user_id' => $user1->id]);
+        $user1->wallet_id = $wallet1->id;
 
-        User::create([
+        $user2 = User::create([
             'id' => 102,
             'name' => 'user2',
             'password' => bcrypt('secret'),
             'email' => 'user2@smm.example.com',
             'roles' => [UserRole::ROLE_VERIFIED],
         ]);
+        $wallet2 = Wallet::create(['user_id' => $user2->id]);
+        $user2->wallet_id = $wallet2->id;
 
-        User::create([
+        $user3 = User::create([
             'id' => 103,
             'name' => 'user3',
             'password' => bcrypt('secret'),
             'email' => 'user3@smm.example.com',
             'roles' => [UserRole::ROLE_VERIFIED],
         ]);
+        $wallet3 = Wallet::create(['user_id' => $user3->id]);
+        $user3->wallet_id = $wallet3->id;
 
 //        factory(User::class, 8)->create();
     }

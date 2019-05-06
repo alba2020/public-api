@@ -2,13 +2,10 @@
 
 namespace App;
 
-use App\Jobs\ActionJob;
-use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\CreateActionsException;
+use App\Jobs\ActionJob;
 
-class Task extends Model {
-    protected $guarded = [];
-
+class Task extends BaseModel {
     public function owner() {
         return $this->belongsTo('App\User', 'owner_id');
     }

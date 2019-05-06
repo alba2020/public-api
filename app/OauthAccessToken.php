@@ -2,9 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+class OauthAccessToken extends BaseModel {
 
-class OauthAccessToken extends Model
-{
-    //
 }

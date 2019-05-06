@@ -38,7 +38,7 @@ class CreateUsersTable extends Migration
 
             $table->text('roles')->nullable();
 
-            $table->decimal('balance', 19, 4)->default('0.00');
+            $table->integer('wallet_id')->nullable();
         });
     }
 

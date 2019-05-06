@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(\App\User::class, function (Faker $faker) {
     $hasFake = rand(1, 100) < 60;
     $hasInstagram = rand(1, 100) < 60;
 

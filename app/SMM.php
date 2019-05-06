@@ -5,6 +5,7 @@ namespace App;
 use App\Exceptions\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class SMM {
     public static function validate(Request $request, array $rules) {
@@ -16,6 +17,6 @@ class SMM {
     }
 
     public static function success($data) {
-        return response()->json(['success' => $data]);
+        return response()->json(['success' => $data], Response::HTTP_OK);
     }
 }

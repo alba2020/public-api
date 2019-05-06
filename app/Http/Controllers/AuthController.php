@@ -141,8 +141,9 @@ class AuthController extends Controller {
 
         Mail::to($request->email)->send(new VerifyEmail($confirmation_code));
 
-        $success['token'] = $user->createToken('MyApp')->accessToken;
-        return response()->json(['success' => $success], Response::HTTP_OK);
+        return SMM::success([
+            'token' => $user->createToken('MyApp')->accessToken
+        ]);
     }
 
     public function confirm($confirmation_code) {
@@ -159,9 +160,7 @@ class AuthController extends Controller {
         $user->confirmation_code = null;
         $user->save();
 
-        return response()->json([
-            'success' => 'You have successfully verified your account.'
-        ], Response::HTTP_OK);
+        return SMM::success('You have successfully verified your account.');
     }
 
     public function reset(Request $request) {
@@ -180,9 +179,7 @@ class AuthController extends Controller {
 
         Mail::to($request->email)->send(new ResetEmail($reset_code));
 
-        return response()->json([
-            'success' => 'Reset code has been sent to your email.'
-        ], Response::HTTP_OK);
+        return SMM::success('Reset code has been sent to your email.');
     }
 
     public function setPassword(Request $request) {
@@ -201,9 +198,7 @@ class AuthController extends Controller {
         $user->reset_code = null;
         $user->save();
 
-        return response()->json([
-            'success' => 'Password changed.'
-        ], Response::HTTP_OK);
+        return SMM::success('Password changed.');
     }
 
     public function logout() {
@@ -214,6 +209,8 @@ class AuthController extends Controller {
             Auth::user()->AauthAcessToken()->delete();
         }
 
-        return response()->json(['message' => 'Successfully logged out'], Response::HTTP_OK);
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ], Response::HTTP_OK);
     }
 }
