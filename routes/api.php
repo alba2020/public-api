@@ -35,13 +35,22 @@ Route::get('services/{service_id}/cost/{n}', 'ServicesController@cost');
 Route::post('services/costs', 'ServicesController@costs');
 
 
+// ------------- orders --------------------
+Route::post('orders/guest', 'OrdersController@guestCreate');
+Route::get('orders/uuid/{uuid}', 'OrdersController@byUUID');
+Route::post('/orders/execute/uuid/{uuid}', 'OrdersController@executeByUUID');
+
+//Route::post('orders/{id}/pay');
+//Route::post('orders/{id}/execute');
+
 Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------
     Route::get('user', 'UserController@details');
     Route::post('logout', 'AuthController@logout');
 
     Route::get('orders', 'OrdersController@index');
-    Route::post('orders', 'OrdersController@store');
+//    Route::post('orders', 'OrdersController@store');
+    Route::post('orders', 'OrdersController@create');
 
 
     Route::group(['middleware' => 'check_user_role:' . UserRole::ROLE_MODERATOR],

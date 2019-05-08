@@ -15,5 +15,9 @@ return [
     'entity_not_found' => 'Entity not found',
     'cost' => 'Could not compute service cost',
     'server' => 'Internal server error',
-    'insufficient_funds' => 'Insufficient funds'
+    'insufficient_funds' => 'Insufficient funds',
+    'model_not_found' => 'Model not found',
+    'bad_parameter' => 'Bad parameter',
+    'private_account' => 'Account is private',
+    'not_enough_media' => 'Not enough media',
 ];

@@ -15,6 +15,7 @@ class UserRole {
     const ROLE_VERIFIED = 'ROLE_VERIFIED';
     const ROLE_SEO = 'ROLE_SEO';
     const ROLE_MODERATOR = 'ROLE_MODERATOR';
+    const ROLE_AUTO = 'ROLE_AUTO';
 
     /**
      * @var array
@@ -23,12 +24,11 @@ class UserRole {
         self::ROLE_ADMIN => [
             self::ROLE_MODERATOR,
         ],
-
         self::ROLE_MODERATOR => [
             self::ROLE_VERIFIED,
         ],
-
         self::ROLE_VERIFIED => [],
+        self::ROLE_AUTO => [],
     ];
 
     public static function getRoles(string $role, array $known_roles = [])
