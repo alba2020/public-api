@@ -38,7 +38,7 @@ Route::post('services/costs', 'ServicesController@costs');
 // ------------- orders --------------------
 Route::post('orders/guest', 'OrdersController@guestCreate');
 Route::get('orders/uuid/{uuid}', 'OrdersController@byUUID');
-Route::post('/orders/execute/uuid/{uuid}', 'OrdersController@executeByUUID');
+Route::post('orders/execute/uuid/{uuid}', 'OrdersController@executeByUUID');
 
 //Route::post('orders/{id}/pay');
 //Route::post('orders/{id}/execute');
