@@ -98,7 +98,8 @@ Route::group(['middleware' => 'auth:api'], function() {
 Route::get('cat', function() {
     return response()->json([
         'cat' => 'the cat',
-        'bonus' => 'production branch'
+        'bonus' => 'production branch',
+        'hello' => 'homestead',
     ], 200);
 });
 
