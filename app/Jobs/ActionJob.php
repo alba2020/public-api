@@ -3,14 +3,14 @@
 namespace App\Jobs;
 
 use App\Action;
+use App\Order;
 use App\Services\FakeService;
 use App\Services\InstagramService;
-use App\Status;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ActionJob implements ShouldQueue
 {
@@ -116,16 +116,16 @@ class ActionJob implements ShouldQueue
         $methodName = $task->platform . '_' . $task->type;
         try {
             $this->$methodName($action);
-            $action->status = Status::COMPLETED;
+            $action->status = Order::STATUS_COMPLETED;
         } catch (\Exception $ex) {
             echo "\n=== action method exception===\n";
-            $action->status = Status::ERROR;
+            $action->status = Order::STATUS_ERROR;
         }
         // ---------
         $action->save();
 
         if ($task->getIncompleteActions() == 0) {
-            $task->status = Status::COMPLETED;
+            $task->status = Order::STATUS_COMPLETED;
             $task->save();
             echo "Task #$task_id is completed.\n";
         }

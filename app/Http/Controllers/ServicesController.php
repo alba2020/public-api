@@ -7,8 +7,6 @@ use App\Exceptions\EntityNotFoundException;
 use App\Service;
 use App\SMM;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Response;
 
 class ServicesController extends Controller {
 
@@ -28,9 +26,7 @@ class ServicesController extends Controller {
             throw EntityNotFoundException::create(['text' => 'Service not found']);
         }
 
-        return response()->json([
-            'success' => Service::computeCost($service, $n),
-        ]);
+        return SMM::success(Service::computeCost($service, $n));
     }
 
 
@@ -59,8 +55,6 @@ class ServicesController extends Controller {
             return Service::computeCost($service, $param->n);
         }, $params);
 
-        return response()->json([
-            'success' => $res,
-        ], Response::HTTP_OK);
+        return SMM::success($res);
     }
 }

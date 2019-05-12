@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Action;
 use App\Comment;
 use App\Exceptions\CreateActionsException;
+use App\Order;
 use App\Services\FakeService;
 use App\Services\InstagramService;
 use App\Services\NakrutkaService;
-use App\Status;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +53,7 @@ class TasksController extends Controller
         $task = new Task();
         $task->fill($request->except('comments'));
         $task->owner_id = Auth::user()->id;
-        $task->status = Status::CREATED;
+        $task->status = Order::STATUS_CREATED;
 
 //        todo test
 //        $local = $request->input('local');
@@ -114,12 +114,12 @@ class TasksController extends Controller
     public function resetAll()
     {
         foreach(Action::all() as $a) {
-            $a->status = Status::CREATED;
+            $a->status = Order::STATUS_CREATED;
             $a->save();
         }
 
         foreach(Task::all() as $t) {
-            $t->status = Status::CREATED;
+            $t->status = Order::STATUS_CREATED;
             $t->save();
         }
 
@@ -134,7 +134,7 @@ class TasksController extends Controller
     public function undo(Task $task)
     {
         foreach($task->actions as $action) {
-            $action->status = Status::CREATED;
+            $action->status = Order::STATUS_CREATED;
             $action->save();
         }
 
@@ -159,7 +159,7 @@ class TasksController extends Controller
 //            throw new \Exception('unknown action type');
 
         $task->type = $reverse[$task->type];
-        $task->status = Status::CREATED;
+        $task->status = Order::STATUS_CREATED;
         $task->save();
         return response()->json(['message' => 'undo'], Response::HTTP_OK);
     }

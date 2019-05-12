@@ -17,8 +17,12 @@ class CreateServicesTable extends Migration
             $table->increments('id');
             $table->string('type');
             $table->string('title');
+
             $table->string('startup'); // 'до 5 минут'
             $table->string('speed'); // '500-1000 в минуту'
+            $table->string('details'); // детали
+            $table->string('requirements'); // требования к аккаунту
+
             $table->integer('min');
             $table->integer('max');
 

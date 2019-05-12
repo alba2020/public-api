@@ -44,7 +44,7 @@ class Task extends BaseModel {
             Action::create([
                 'task_id' => $this->id,
                 'worker_id' => $worker->id,
-                'status' => Status::CREATED
+                'status' => Order::STATUS_CREATED,
             ]);
         }
     }
@@ -53,7 +53,7 @@ class Task extends BaseModel {
         //todo optimize
         $res = 0;
         foreach ($this->actions as $a) {
-            if ($a->status != Status::COMPLETED) {
+            if ($a->status != Order::STATUS_COMPLETED) {
                 $res++;
             }
         }
@@ -72,12 +72,12 @@ class Task extends BaseModel {
         if ($type) {
             $tasks = Task::where('platform', $platform)
                 ->where('type', $type)
-                ->where('status', Status::CREATED)
+                ->where('status', Order::STATUS_CREATED)
                 ->get()
                 ->all();
         } else {
             $tasks = Task::where('platform', $platform)
-                ->where('status', Status::CREATED)
+                ->where('status', Order::STATUS_CREATED)
                 ->get()
                 ->all();
         }

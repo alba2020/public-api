@@ -9,7 +9,6 @@ use App\Order;
 use App\Service;
 use App\Services\InstagramScraperService;
 use App\Services\NakrutkaService;
-use App\Status;
 use Symfony\Component\HttpFoundation\Response;
 use Tightenco\Parental\HasParent;
 
@@ -23,7 +22,7 @@ class LikesSpread extends Order {
         }
 
         $scraper = app()->make(InstagramScraperService::class);
-        $scraper->checkLogin($details->instagram_login);
+        $scraper->checkLoginNotPrivate($details->instagram_login);
 
         if (!isset($details->likes_per_post)) {
             throw MissingParameterException::create(['text' => 'likes_per_post']);
@@ -74,14 +73,17 @@ class LikesSpread extends Order {
             $this->details['posts']
         );
 
+        $ids = [];
         foreach($codes as $code) {
-            $nakrutka->add(
+            $response = $nakrutka->add(
                 'https://[BAD_URL]www.instagram.com/p/' . $code,
                 $this->details['likes_per_post']
             );
+            $ids[] = $response->order;
         }
 
-        $this->status = Status::RUNNING;
+        $this->details = $this->details + ['nakrutka_ids' => $ids];
+        $this->status = Order::STATUS_RUNNING;
         $this->save();
 
         return response()->json($this, Response::HTTP_CREATED);

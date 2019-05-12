@@ -35,7 +35,7 @@ class FakeWorkersTest extends TestCase
             'url' => 'http://fake1',
             'type' => 'like',
             'n' => 1, 'speed' => 1,
-            'status' => Status::CREATED]);
+            'status' => Order::STATUS_CREATED]);
 
         Task::create([
             'id' => 2,
@@ -44,7 +44,7 @@ class FakeWorkersTest extends TestCase
             'url' => 'http://fake2',
             'type' => 'like',
             'n' => 1, 'speed' => 1,
-            'status' => Status::CREATED]);
+            'status' => Order::STATUS_CREATED]);
 
         Task::create([
             'id' => 3,
@@ -53,7 +53,7 @@ class FakeWorkersTest extends TestCase
             'url' => 'http://fake3',
             'type' => 'like',
             'n' => 1, 'speed' => 1,
-            'status' => Status::CREATED]);
+            'status' => Order::STATUS_CREATED]);
 
         Task::create([
             'id' => 4,
@@ -62,14 +62,14 @@ class FakeWorkersTest extends TestCase
             'url' => 'http://fake1',
             'type' => 'comment',
             'n' => 1, 'speed' => 1,
-            'status' => Status::CREATED]);
+            'status' => Order::STATUS_CREATED]);
 
         Action::create(['id' => 1, 'task_id' => 1, 'worker_id' => 2,
-            'status' => Status::CREATED]);
+            'status' => Order::STATUS_CREATED]);
         Action::create(['id' => 2, 'task_id' => 2, 'worker_id' => 3,
-            'status' => Status::CREATED]);
+            'status' => Order::STATUS_CREATED]);
         Action::create(['id' => 3, 'task_id' => 2, 'worker_id' => 2,
-            'status' => Status::CREATED]);
+            'status' => Order::STATUS_CREATED]);
     }
 
 

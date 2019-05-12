@@ -17,6 +17,8 @@ class ServicesTableSeeder extends Seeder {
             'title' => 'Лайки',
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
+            'details' => 'Качественные лайки',
+            'requirements' => 'Аккаунт должен быть открытым',
             'min' => 100,
             'max' => 10000,
             'nakrutka_id' => 1,
@@ -28,44 +30,46 @@ class ServicesTableSeeder extends Seeder {
             'price_50k' => 0.035,
             'price_100k' => 0.035,
         ]);
-
-        Service::create([
-            'id' => 2,
-            'type' => Constants::SERVICE_INSTAGRAM_LIKES_SPREAD,
-            'title' => 'Лайки на несколько публикаций',
-            'startup' => 'до 5 минут',
-            'speed' => '500-1000 в минуту',
-            'min' => 100,
-            'max' => 10000,
-            'nakrutka_id' => 1,
-            'price' => 0.05,
-            'price_1k' => 0.045,
-            'price_5k' => 0.042,
-            'price_10k' => 0.039,
-            'price_25k' => 0.038,
-            'price_50k' => 0.035,
-            'price_100k' => 0.035,
-        ]);
-
 
 //        Service::create([
 //            'id' => 2,
-//            'type' => Constants::SERVICE_INSTAGRAM_SUBS,
-//            'title' => 'Подписчики',
+//            'type' => Constants::SERVICE_INSTAGRAM_LIKES_SPREAD,
+//            'title' => 'Лайки на несколько публикаций',
 //            'startup' => 'до 5 минут',
 //            'speed' => '500-1000 в минуту',
 //            'min' => 100,
 //            'max' => 10000,
 //            'nakrutka_id' => 1,
-//            'price' => 0.35,
-//            'price_1k' => 0.3,
-//            'price_5k' => 0.278,
-//            'price_10k' => 0.27,
-//            'price_25k' => 0.25,
-//            'price_50k' => 0.198,
-//            'price_100k' => 0.17,
+//            'price' => 0.05,
+//            'price_1k' => 0.045,
+//            'price_5k' => 0.042,
+//            'price_10k' => 0.039,
+//            'price_25k' => 0.038,
+//            'price_50k' => 0.035,
+//            'price_100k' => 0.035,
 //        ]);
-//
+
+
+        Service::create([
+            'id' => 2,
+            'type' => Constants::SERVICE_INSTAGRAM_SUBS,
+            'title' => 'Подписчики',
+            'startup' => 'до 5 минут',
+            'speed' => '500-1000 в минуту',
+            'details' => 'Качественные подписчики',
+            'requirements' => 'Аккаунт должен быть открытым',
+            'min' => 100,
+            'max' => 10000,
+            'nakrutka_id' => 1,
+            'price' => 0.35,
+            'price_1k' => 0.3,
+            'price_5k' => 0.278,
+            'price_10k' => 0.27,
+            'price_25k' => 0.25,
+            'price_50k' => 0.198,
+            'price_100k' => 0.17,
+        ]);
+
 //        Service::create([
 //            'id' => 3,
 //            'type' => Constants::SERVICE_INSTAGRAM_VIEWS,

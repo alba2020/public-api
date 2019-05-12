@@ -21,6 +21,7 @@ class Constants extends Model
 
     const subclasses = [
         self::SERVICE_INSTAGRAM_LIKES => \App\Orders\Likes::class,
-        self::SERVICE_INSTAGRAM_LIKES_SPREAD => \App\Orders\LikesSpread::class,
+//        self::SERVICE_INSTAGRAM_LIKES_SPREAD => \App\Orders\LikesSpread::class,
+        self::SERVICE_INSTAGRAM_SUBS => \App\Orders\Subscribers::class,
     ];
 }

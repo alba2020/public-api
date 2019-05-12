@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Role\UserRole;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -152,5 +153,25 @@ class User extends Authenticatable {
         }
 
         return $roles;
+    }
+
+    public static function createAuto($length) {
+        $r = str_random($length);
+        return User::create([
+            'name' => 'user_' . $r,
+            'password' => bcrypt($r),
+            'email' => $r . '@smm.example.com',
+            'roles' => [UserRole::ROLE_AUTO],
+        ]);
+    }
+
+    public function giveMoney(float $amount) {
+        $wallet = $this->wallet;
+
+        $wallet->applyTransaction(
+            Transaction::INFLOW_CREATE,
+            $amount,
+            "Money created"
+        );
     }
 }

@@ -20,4 +20,5 @@ return [
     'bad_parameter' => 'Неверный параметр',
     'private_account' => 'Приватный аккаунт',
     'not_enough_media' => 'Недостаточно публикаций',
+    'foreign_service' => 'Ошибка стороннего сервиса',
 ];

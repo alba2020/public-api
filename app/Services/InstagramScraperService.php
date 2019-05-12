@@ -35,6 +35,19 @@ class InstagramScraperService {
                 'info' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function checkLoginNotPrivate($login) {
+        $instagram = new Instagram();
+
+        try {
+            $account = $instagram->getAccount($login);
+        } catch (\Exception $e) {
+            throw BadParameterException::create([
+                'text' => 'bad login',
+                'info' => $e->getMessage(),
+            ]);
+        }
 
         if($account->isPrivate()) {
             throw PrivateAccountException::create(['text' => $login]);

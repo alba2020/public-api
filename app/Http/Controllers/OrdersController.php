@@ -6,14 +6,16 @@ use App\Constants;
 use App\Exceptions\EntityNotFoundException;
 use App\Exceptions\InsufficientFundsException;
 use App\Exceptions\MissingParameterException;
+use App\Exceptions\NotEnoughMediaException;
 use App\Exceptions\ServerException;
 use App\Exceptions\ValidationException;
 use App\Order;
 use App\Role\UserRole;
+use App\Rules\JSONContains;
 use App\Service;
+use App\Services\InstagramScraperService;
 use App\Services\NakrutkaService;
 use App\SMM;
-use App\Transaction;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +90,54 @@ class OrdersController extends Controller {
         return response()->json($order, Response::HTTP_CREATED);
     }
 
+    public function batchCreate(Request $request, Service $service) {
+        $user = Auth::user();
+        return $this->_batchStore($request, $service, $user);
+    }
+
+    public function guestBatchCreate(Request $request, Service $service) {
+        $user = User::createAuto(8);
+        return $this->_batchStore($request, $service, $user);
+    }
+
+    protected function _batchStore(Request $request, Service $service, User $user) {
+        SMM::validate($request, [
+            'details' => ['required', 'json'],
+        ]);
+
+        $orderClass = Constants::subclasses[$service->type];
+        if (!$orderClass) {
+            throw ValidationException::create(['text' => 'Bad service type']);
+        }
+
+        $details = json_decode($request->details);
+        $createdOrders = [];
+        $totalCost = 0;
+
+        foreach($details as $orderDetails) {
+            $orderClass::convert($orderDetails);
+            $orderClass::validate($orderDetails);
+        }
+        foreach($details as $orderDetails) {
+            $newOrder = $orderClass::make($service, $user, $orderDetails);
+            $createdOrders[] = $newOrder;
+            $totalCost += $newOrder->cost;
+        }
+
+        if ($user->wallet->balance < $totalCost) {
+            // compute payment parameters
+            $paymentString = "http://kassa.com/?amount=" . ($totalCost - $user->wallet->balance);
+        } else {
+            $paymentString = "";
+        }
+
+        return SMM::success([
+            'orders' => $createdOrders,
+            'total' => $totalCost,
+            'payment_string' => $paymentString,
+        ]);
+    }
+
     // создать заказ
     public function create(Request $request) {
         $user = Auth::user();
@@ -95,33 +145,24 @@ class OrdersController extends Controller {
     }
 
     public function guestCreate(Request $request) {
-        $r = str_random(8);
-        $user = User::create([
-            'name' => 'user_' . $r,
-            'password' => bcrypt($r),
-            'email' => $r . '@smm.example.com',
-            'roles' => [UserRole::ROLE_AUTO],
-        ]);
+        $user = User::createAuto(8);
         return $this->_store($request, $user);
     }
 
     protected function _store(Request $request, $user) {
         SMM::validate($request, [
-            'details' => 'required|json'
+            'details' => ['required', 'json', new JSONContains('service_id')],
         ]);
 
         $details = json_decode($request->details);
-        if(!$details->service_id) {
-            throw MissingParameterException::create(['text' => 'service_id']);
-        }
         $service = Service::findOrFail($details->service_id);
         $orderClass = Constants::subclasses[$service->type];
         if (!$orderClass) {
             throw ValidationException::create(['text' => 'Bad service type']);
         }
 
+        $orderClass::convert($details);
         $orderClass::validate($details);
-
         $newOrder = $orderClass::make($service, $user, $details);
 //        dd($newOrder);
 
@@ -144,7 +185,27 @@ class OrdersController extends Controller {
     public function executeByUUID(string $uuid) {
         $order = Order::byUUID($uuid);
         $order->pay();
-        return $order->run();
+        $order->run();
+        return response()->json($order, Response::HTTP_OK);
+    }
+
+    public function batchExecuteByUUID(Request $request) {
+        SMM::validate($request, [
+            'details' => ['required', 'json'],
+        ]);
+
+        $details = json_decode($request->details);
+        $runningOrders = [];
+        foreach($details as $uuid) {
+            $order = Order::byUUID($uuid);
+            if ($order->status !== Order::STATUS_RUNNING &&
+                $order->status !== Order::STATUS_COMPLETED) {
+                $order->pay();
+                $order->run();
+                $runningOrders[] = $order;
+            }
+        }
+        return SMM::success($runningOrders);
     }
 
 //    public function spreadLikes(Request $request, NakrutkaService $nakrutka) {
@@ -166,4 +227,33 @@ class OrdersController extends Controller {
 //
 //        $cost = $service->
 //    }
+
+    public function spread(Request $request) {
+        SMM::validate($request, [
+            'instagram_login' => 'required',
+            'posts' => 'required',
+        ]);
+
+        $scraper = app()->make(InstagramScraperService::class);
+        $scraper->checkLoginNotPrivate($request->instagram_login);
+
+        $codes = $scraper->getMediaCodes(
+            $request->instagram_login,
+            $request->posts
+        );
+
+        if(count($codes) < $request->posts) {
+            throw NotEnoughMediaException::create([
+                'amount' => $request->posts,
+                'actual' => count($codes),
+            ]);
+        }
+
+        $res = [];
+        foreach($codes as $code) {
+            $res[] = 'https://www.instagram.com/p/' . $code;
+        }
+
+        return SMM::success(['posts' => $res]);
+    }
 }

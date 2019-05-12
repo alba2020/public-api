@@ -1,7 +1,11 @@
 <?php
 
 use App\Role\UserRole;
+use App\Rules\JSONContains;
+use App\Service;
+use App\SMM;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +23,7 @@ use Illuminate\Http\Request;
 //});
 
 
-Route::post('login', 'AuthController@login'); // deprecated
+//Route::post('login', 'AuthController@login'); // deprecated
 Route::post('login/email', 'AuthController@loginWithEmail');
 Route::post('login/vk', 'AuthController@loginWithVK');
 Route::post('login/fb', 'AuthController@loginWithFB');
@@ -36,12 +40,14 @@ Route::post('services/costs', 'ServicesController@costs');
 
 
 // ------------- orders --------------------
-Route::post('orders/guest', 'OrdersController@guestCreate');
+Route::post('orders/guest', 'OrdersController@guestBatchCreate');
 Route::get('orders/uuid/{uuid}', 'OrdersController@byUUID');
-Route::post('orders/execute/uuid/{uuid}', 'OrdersController@executeByUUID');
+// details - JSON
+// ["9823316e6b16f7454e65f4ccea3a36f9", "46471933fc65fd218f4581e3974ff1f5"]
+Route::post('orders/execute/uuid', 'OrdersController@batchExecuteByUUID');
 
-//Route::post('orders/{id}/pay');
-//Route::post('orders/{id}/execute');
+Route::post('orders/spread', 'OrdersController@spread');
+
 
 Route::group(['middleware' => 'auth:api'], function() {
     // --------------- user ---------------------------
@@ -49,9 +55,14 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('logout', 'AuthController@logout');
 
     Route::get('orders', 'OrdersController@index');
-//    Route::post('orders', 'OrdersController@store');
-    Route::post('orders', 'OrdersController@create');
+//    Route::post('orders', 'OrdersController@create');
 
+// details: JSON
+//[
+// {"url": "https://www.instagram.com/p/BxFMFbeAjoL", "n": 102},
+// {"url": "https://www.instagram.com/p/BxFMFbeAjoL", "n": 100}
+//]
+    Route::post('orders/service/{service}', 'OrdersController@batchCreate');
 
     Route::group(['middleware' => 'check_user_role:' . UserRole::ROLE_MODERATOR],
         function() {
@@ -96,6 +107,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 });
 
 Route::get('cat', function() {
+
     return response()->json([
         'cat' => 'the cat',
         'bonus' => 'production branch',
@@ -103,13 +115,16 @@ Route::get('cat', function() {
     ], 200);
 });
 
-Route::get('excat', function() {
-//    throw new \App\Exceptions\CatException(1);
-    throw \App\Exceptions\CatException::create(['n' => 12]);
-//   return response()->json([
-//       'hello' => 'world',
-//   ]);
+Route::post('cat', function(Request $request) {
+    SMM::validate($request, [
+        'details' => ['required', 'json', new JSONContains('param')],
+    ]);
+
+    return response()->json([
+        'cat' => 'the cat',
+    ], 200);
 });
+
 
 Route::post('vk/token', 'VKController@token');
 Route::post('fb/token', 'FBController@token');
