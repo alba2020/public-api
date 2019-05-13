@@ -13,6 +13,10 @@ class NakrutkaService
         $this->api_service = $config['api_service'];
     }
 
+    public function setApiService($serviceId) {
+        $this->api_service = $serviceId;
+    }
+
     public function order($data) { // add order
         $post = array_merge(array('key' => $this->api_key, 'action' => 'add'), $data);
         return json_decode($this->connect($post));

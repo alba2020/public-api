@@ -1,8 +1,8 @@
 <?php
 
-use Faker\Generator as Faker;
+use App\Order;
 use App\User;
-use App\Status;
+use Faker\Generator as Faker;
 
 $factory->define(\App\Task::class, function (Faker $faker) {
 
@@ -13,6 +13,6 @@ $factory->define(\App\Task::class, function (Faker $faker) {
         'type' => 'like',
         'n' => rand(1, 2),
         'speed' => rand(0, 9),
-        'status' => Status::CREATED,
+        'status' => Order::STATUS_CREATED,
     ];
 });

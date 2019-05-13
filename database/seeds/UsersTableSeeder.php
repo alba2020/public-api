@@ -2,6 +2,7 @@
 
 use App\Role\UserRole;
 use App\User;
+use App\Wallet;
 use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
@@ -88,34 +89,52 @@ class UsersTableSeeder extends Seeder
 
         User::create([
             'id' => 1000,
-            'name' => 'Administrator',
-            'email' => 'admin@admin.panel',
-            'password' => bcrypt('secret'),
-        ]);
-
-        User::create([
-            'id' => 1001,
             'name' => 'admin',
-            'password' => bcrypt('secret'),
             'email' => 'admin@smm.example.com',
+            'password' => bcrypt('secret'),
             'roles' => [UserRole::ROLE_ADMIN],
         ]);
 
         User::create([
-            'id' => 1002,
-            'name' => 'manager',
+            'id' => 1001,
+            'name' => 'moder',
             'password' => bcrypt('secret'),
-            'email' => 'manager@smm.example.com',
-            'roles' => [UserRole::ROLE_MANAGER],
+            'email' => 'moder@smm.example.com',
+            'roles' => [UserRole::ROLE_MODERATOR],
         ]);
 
-        User::create([
-            'id' => 1003,
-            'name' => 'blogger',
+        $user1 = User::create([
+            'id' => 101,
+            'name' => 'user1',
             'password' => bcrypt('secret'),
-            'email' => 'blogger@smm.example.com',
-            'roles' => [UserRole::ROLE_BLOGGER, UserRole::ROLE_SEO],
+            'email' => 'user1@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
         ]);
+        $wallet1 = Wallet::create(['user_id' => $user1->id]);
+        $user1->wallet_id = $wallet1->id;
+        $user1->save();
+
+        $user2 = User::create([
+            'id' => 102,
+            'name' => 'user2',
+            'password' => bcrypt('secret'),
+            'email' => 'user2@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
+        ]);
+        $wallet2 = Wallet::create(['user_id' => $user2->id]);
+        $user2->wallet_id = $wallet2->id;
+        $user2->save();
+
+        $user3 = User::create([
+            'id' => 103,
+            'name' => 'user3',
+            'password' => bcrypt('secret'),
+            'email' => 'user3@smm.example.com',
+            'roles' => [UserRole::ROLE_VERIFIED],
+        ]);
+        $wallet3 = Wallet::create(['user_id' => $user3->id]);
+        $user3->wallet_id = $wallet3->id;
+        $user3->save();
 
 //        factory(User::class, 8)->create();
     }

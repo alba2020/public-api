@@ -2,13 +2,13 @@
 
 namespace App;
 
+use App\Role\UserRole;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use HasApiTokens, Notifiable;
 
     /**
@@ -45,27 +45,35 @@ class User extends Authenticatable
         return $this->hasMany('\App\OauthAccessToken');
     }
 
-    public function tasks()
-    {
+    public function tasks() {
         return $this->hasMany('App\Task', 'owner_id');
     }
 
-    public function actions()
-    {
+    public function orders() {
+        return $this->hasMany('App\Order');
+    }
+
+    public function actions() {
         return $this->hasMany('App\Action', 'worker_id');
     }
 
-    public function scopeFakeWorkers($query, $task)
-    {
+    public function bots() {
+        return $this->hasMany('App\Bot');
+    }
+
+    public function wallet() {
+        return $this->hasOne('App\Wallet')->withDefault();
+    }
+
+    public function scopeFakeWorkers($query, $task) {
         $ids = self::whoDid($task->url, $task->type);
 
         return $query->where('fake_login', '!=', null)
-                     ->where('id', '!=', $task->owner_id)
-                     ->whereNotIn('id', $ids);
+            ->where('id', '!=', $task->owner_id)
+            ->whereNotIn('id', $ids);
     }
 
-    public function scopeInstagramWorkers($query, $task)
-    {
+    public function scopeInstagramWorkers($query, $task) {
         $ids = self::whoDid($task->url, $task->type);
 
         return $query->where('instagram_login', '!=', null)
@@ -73,19 +81,17 @@ class User extends Authenticatable
             ->whereNotIn('id', $ids);
     }
 
-    public static function whoDid($url, $type)
-    {
+    public static function whoDid($url, $type) {
         $ids = DB::table('tasks')
-                ->where('tasks.url', $url)
-                ->where('tasks.type', $type)
-                ->join('actions', 'tasks.id', '=', 'actions.task_id')
-                ->pluck('worker_id')
-                ->all();
+            ->where('tasks.url', $url)
+            ->where('tasks.type', $type)
+            ->join('actions', 'tasks.id', '=', 'actions.task_id')
+            ->pluck('worker_id')
+            ->all();
         return $ids;
     }
 
-    public function instagramProxy()
-    {
+    public function instagramProxy() {
         return $this->belongsTo('App\Proxy');
     }
 
@@ -95,8 +101,7 @@ class User extends Authenticatable
      * @param string $role
      * @return $this
      */
-    public function addRole(string $role)
-    {
+    public function addRole(string $role) {
         $roles = $this->getRoles();
         $roles[] = $role;
 
@@ -110,8 +115,7 @@ class User extends Authenticatable
      * @param array $roles
      * @return $this
      */
-    public function setRoles(array $roles)
-    {
+    public function setRoles(array $roles) {
         $this->setAttribute('roles', $roles);
         return $this;
     }
@@ -120,8 +124,7 @@ class User extends Authenticatable
      * @param $role
      * @return mixed
      */
-    public function hasRole($role)
-    {
+    public function hasRole($role) {
         return in_array($role, $this->getRoles());
     }
 
@@ -129,11 +132,10 @@ class User extends Authenticatable
      * @param $roles
      * @return mixed
      */
-    public function hasRoles($roles)
-    {
+    public function hasRoles($roles) {
         $currentRoles = $this->getRoles();
-        foreach($roles as $role) {
-            if ( ! in_array($role, $currentRoles )) {
+        foreach ($roles as $role) {
+            if (!in_array($role, $currentRoles)) {
                 return false;
             }
         }
@@ -143,8 +145,7 @@ class User extends Authenticatable
     /**
      * @return array
      */
-    public function getRoles()
-    {
+    public function getRoles() {
         $roles = $this->getAttribute('roles');
 
         if (is_null($roles)) {
@@ -152,5 +153,25 @@ class User extends Authenticatable
         }
 
         return $roles;
+    }
+
+    public static function createAuto($length) {
+        $r = str_random($length);
+        return User::create([
+            'name' => 'user_' . $r,
+            'password' => bcrypt($r),
+            'email' => $r . '@smm.example.com',
+            'roles' => [UserRole::ROLE_AUTO],
+        ]);
+    }
+
+    public function giveMoney(float $amount) {
+        $wallet = $this->wallet;
+
+        $wallet->applyTransaction(
+            Transaction::INFLOW_CREATE,
+            $amount,
+            "Money created"
+        );
     }
 }

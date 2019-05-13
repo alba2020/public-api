@@ -2,9 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+class Fake extends BaseModel {
 
-class Fake extends Model
-{
-    protected $guarded = [];
 }

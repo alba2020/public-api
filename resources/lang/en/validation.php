@@ -116,6 +116,8 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
 
+    'contains_field' => 'The :attribute must contain mandatory field',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

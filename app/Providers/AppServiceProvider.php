@@ -6,6 +6,7 @@ use App\Http\Middleware\CheckUserRole;
 use App\Role\RoleChecker;
 use App\Services\FakeService;
 use App\Services\FBService;
+use App\Services\InstagramScraperService;
 use App\Services\NakrutkaService;
 use App\Services\VKService;
 use Illuminate\Foundation\Application;
@@ -51,6 +52,10 @@ class AppServiceProvider extends ServiceProvider
             return new CheckUserRole(
                 $app->make(RoleChecker::class)
             );
+        });
+
+        app()->bind(InstagramScraperService::class, function () {
+            return new InstagramScraperService();
         });
     }
 

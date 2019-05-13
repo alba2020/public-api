@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-    const CREATED = 1;
-    const RUNNING = 2;
-    const COMPLETED = 4;
-    const ERROR = 8;
+    // bots
+    const BOT_OK = 'BOT_OK';
+    const BOT_ERROR = 'BOT_ERROR';
+    const BOT_UNKNOWN = 'BOT_UNKNOWN';
 }
