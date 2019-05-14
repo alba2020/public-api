@@ -38,6 +38,11 @@ class GetStatuses extends Command {
     public function handle() {
         $runningOrders = Order::where('status', Order::STATUS_RUNNING)->get()->all();
 
+        if (empty($runningOrders)) {
+            echo "No running orders\n";
+            return;
+        }
+
         $req = [];
 
         foreach($runningOrders as $order) {
@@ -59,12 +64,14 @@ class GetStatuses extends Command {
 
         // In progress - выполняется
         // Pending - ожидает
-        // Partial - частично
+        // Processing -
+
+        // Partial - частично выполнен. возврат.
 
         // Canceled - отменен
 
         // Completed - выполнен
 
-//        print_r($res);
+        print_r($res);
     }
 }

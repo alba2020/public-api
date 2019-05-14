@@ -15,6 +15,7 @@ class Order extends BaseModel {
 
     const STATUS_CREATED = 'STATUS_CREATED';
     const STATUS_RUNNING = 'STATUS_RUNNING';
+    const STATUS_PARTIAL_COMPLETED = 'STATUS_PARTIAL_COMPLETED';
     const STATUS_COMPLETED = 'STATUS_COMPLETED';
     const STATUS_ERROR = 'STATUS_ERROR';
     const STATUS_CANCELED = 'STATUS_CANCELED';
@@ -50,6 +51,7 @@ class Order extends BaseModel {
     }
 
     public static function make($service, $user, $details) {
+        $price = $service->getPrice($details->n);
         $cost = $service->getCost($details->n);
 
         try {
@@ -58,6 +60,7 @@ class Order extends BaseModel {
                 'user_id' => $user->id,
                 'service_id' => $service->id,
                 'details' => (array) $details,
+                'price' => $price,
                 'cost' => $cost,
             ]);
 
@@ -91,6 +94,7 @@ class Order extends BaseModel {
         $service = Service::findOrFail($this->service_id);
         $nakrutka->setApiService($service->nakrutka_id);
 
+        $link = rand(1, 10000);
         $response = $nakrutka->add('http://[BAD_URL]' . $link, $quantity);
         if (!isset($response->order)) {
             throw ForeignServiceException::create(['text' => 'nakrutka did not return order']);
@@ -109,7 +113,19 @@ class Order extends BaseModel {
     // проверить статус заказа по ответу внешнего сервиса
     public function changeStatus($response) {
         $nid = $this->getForeignId();
-        $this->status = self::convertStatus($response->$nid->status);
+        $newStatus = self::convertStatus($response->$nid->status);
+        $this->status = $newStatus;
+
+        if ($newStatus === static::STATUS_PARTIAL_COMPLETED) {
+            $remains = $response->$nid->remains;
+            $refund = $remains * $this->price;
+
+            $this->wallet->applyTransaction(
+                Transaction::INFLOW_REFUND,
+                $refund,
+                "Order id: $this->id uuid: $this->uuid remains: $remains"
+            );
+        }
         $this->save();
     }
 
@@ -117,7 +133,8 @@ class Order extends BaseModel {
         $table = [
             'In progress' => static::STATUS_RUNNING,
             'Pending' => static::STATUS_RUNNING,
-            'Partial' => static::STATUS_RUNNING,
+            'Processing' => static::STATUS_RUNNING,
+            'Partial' => static::STATUS_PARTIAL_COMPLETED,
             'Canceled' => static::STATUS_CANCELED,
             'Completed' => static::STATUS_COMPLETED,
         ];

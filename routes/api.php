@@ -108,10 +108,10 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::get('cat', function() {
 
+    $svc = app()->make('\App\Services\InstagramScraperService');
+
     return response()->json([
-        'cat' => 'the cat',
-        'bonus' => 'production branch',
-        'hello' => 'homestead',
+        'cat' => $svc->getCat('hello'),
     ], 200);
 });
 

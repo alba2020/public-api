@@ -26,7 +26,7 @@ class Service extends BaseModel {
         } else if ($n >= 100000) {
             return $this->price_100k;
         } else {
-            return null;
+            return $this->price;
         }
     }
 

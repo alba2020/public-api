@@ -7,6 +7,7 @@ class Transaction extends BaseModel {
     const INFLOW_TEST = 'INFLOW_TEST';
     const INFLOW_OTHER = 'INFLOW_OTHER';
     const INFLOW_CREATE = 'INFLOW_CREATE';
+    const INFLOW_REFUND = 'INFLOW_REFUND';
 
     const OUTFLOW_TEST = 'OUTFLOW_TEST';
     const OUTFLOW_OTHER = 'OUTFLOW_OTHER';

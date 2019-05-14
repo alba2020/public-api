@@ -237,23 +237,18 @@ class OrdersController extends Controller {
         $scraper = app()->make(InstagramScraperService::class);
         $scraper->checkLoginNotPrivate($request->instagram_login);
 
-        $codes = $scraper->getMediaCodes(
+        $urls = $scraper->getMediaURLs(
             $request->instagram_login,
             $request->posts
         );
 
-        if(count($codes) < $request->posts) {
+        if(count($urls) < $request->posts) {
             throw NotEnoughMediaException::create([
                 'amount' => $request->posts,
-                'actual' => count($codes),
+                'actual' => count($urls),
             ]);
         }
 
-        $res = [];
-        foreach($codes as $code) {
-            $res[] = 'https://www.instagram.com/p/' . $code;
-        }
-
-        return SMM::success(['posts' => $res]);
+        return SMM::success(['posts' => $urls]);
     }
 }

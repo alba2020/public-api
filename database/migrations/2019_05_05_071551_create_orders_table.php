@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->integer('service_id');
             $table->string('type')->nullable(); // == service->type
             $table->decimal('cost', 19, 4)->default('0.00');
+            $table->decimal('price', 19, 4)->default('0.00');
             $table->string('status')->default(Order::STATUS_CREATED);
             // json not supported in MariaDB 10.1
             $table->text('details')->nullable(); // url, n etc.
