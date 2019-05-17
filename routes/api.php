@@ -35,6 +35,8 @@ Route::post('reset', 'AuthController@reset');
 Route::post('set_password', 'AuthController@setPassword');
 
 Route::get('services', 'ServicesController@index');
+Route::get('services/g', 'ServicesController@indexGrouped');
+
 Route::get('services/{service_id}/cost/{n}', 'ServicesController@cost');
 Route::post('services/costs', 'ServicesController@costs');
 
@@ -71,6 +73,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     Route::get('users/{id}/bots', 'UserController@bots');
     Route::get('users/{id}/orders', 'UserController@orders');
+    Route::get('users/{id}/orders/g', 'UserController@ordersGrouped');
     Route::get('users/{id}/transactions', 'UserController@transactions');
 
     // --------------- tasks -------------------

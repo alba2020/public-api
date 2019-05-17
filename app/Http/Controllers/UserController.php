@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\UserNotFoundException;
+use App\SMM;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,16 @@ class UserController extends Controller {
             throw UserNotFoundException::create(['id' => $id]);
         }
         return $user->orders()->get()->all();
+    }
+
+    public function ordersGrouped($id) {
+        $user = User::find($id);
+        if(!$user) {
+            throw UserNotFoundException::create(['id' => $id]);
+        }
+        $orders = $user->orders()->get()->all();
+        $o = SMM::makeGroups($orders, ['instagram', 'vk', 'auto']);
+        return response()->json($o, Response::HTTP_OK);
     }
 
     public function transactions($id) {

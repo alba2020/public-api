@@ -6,6 +6,8 @@ use App\Exceptions\BadParameterException;
 use App\Exceptions\NotEnoughMediaException;
 use App\Exceptions\PrivateAccountException;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use InstagramAPI\Exception\InstagramException;
 use \InstagramScraper\Instagram;
 
 class InstagramScraperService {
@@ -91,7 +93,6 @@ class InstagramScraperService {
     public function getMediaCodes($login, $amount) {
         $instagram = new Instagram();
         $medias = $instagram->getMedias($login, $amount);
-
         return array_map(function($media) {
             return $media->getShortCode();
         }, $medias);
@@ -99,7 +100,15 @@ class InstagramScraperService {
 
     public function getMediaURLs($login, $amount) {
         $instagram = new Instagram();
-        $medias = $instagram->getMedias($login, $amount);
+
+        Log::info('login ' . $login);
+        Log::info('amount ' . $amount);
+
+        try {
+            $medias = $instagram->getMedias($login, $amount);
+        } catch (\InstagramScraper\Exception\InstagramException $e) {
+//            dd($e);
+        }
 
         $urls = array_map(function($media) {
             $url = 'https://www.instagram.com/p/' . $media->getShortCode();

@@ -19,9 +19,12 @@ class Constants extends Model
     const SERVICE_INSTAGRAM_AUTOVIEWS = 'SERVICE_INSTAGRAM_AUTOVIEWS';
     const SERVICE_INSTAGRAM_STORIES_VIEWS = 'SERVICE_INSTAGRAM_STORIES_VIEWS';
 
+    const SERVICE_AUTO_FAKE = 'SERVICE_AUTO_FAKE';
+
     const subclasses = [
         self::SERVICE_INSTAGRAM_LIKES => \App\Orders\Likes::class,
 //        self::SERVICE_INSTAGRAM_LIKES_SPREAD => \App\Orders\LikesSpread::class,
         self::SERVICE_INSTAGRAM_SUBS => \App\Orders\Subscribers::class,
+        self::SERVICE_AUTO_FAKE => \App\Orders\AutoFake::class,
     ];
 }

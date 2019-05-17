@@ -50,13 +50,17 @@ class Order extends BaseModel {
         return;
     }
 
+    public static function makeUUID() {
+        return md5(uniqid());
+    }
+
     public static function make($service, $user, $details) {
         $price = $service->getPrice($details->n);
         $cost = $service->getCost($details->n);
 
         try {
             $order = static::create([
-                'uuid' => md5(uniqid()),
+                'uuid' => self::makeUUID(),
                 'user_id' => $user->id,
                 'service_id' => $service->id,
                 'details' => (array) $details,

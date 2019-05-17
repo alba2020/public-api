@@ -23,6 +23,8 @@ class CreateServicesTable extends Migration
             $table->string('details'); // детали
             $table->string('requirements'); // требования к аккаунту
 
+            $table->text('info')->nullable(); // массив инфо
+
             $table->integer('min');
             $table->integer('max');
 

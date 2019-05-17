@@ -6,6 +6,14 @@ use App\Exceptions\CostException;
 
 class Service extends BaseModel {
 
+    protected $casts = [
+        'info' => 'array',
+    ];
+
+    public static function getByType(string $type) {
+        return self::where('type', $type)->first();
+    }
+
     public function orders() {
         return $this->hasMany('App\Order');
     }

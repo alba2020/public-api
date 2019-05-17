@@ -7,11 +7,19 @@ use App\Exceptions\EntityNotFoundException;
 use App\Service;
 use App\SMM;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServicesController extends Controller {
 
     public function index() {
         return Service::all();
+    }
+
+    public function indexGrouped() {
+        $services = Service::get()->all();
+
+        $o = SMM::makeGroups($services, ['instagram', 'vk', 'auto']);
+        return response()->json($o, Response::HTTP_OK);
     }
 
     /**

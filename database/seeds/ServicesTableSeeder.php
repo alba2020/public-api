@@ -12,13 +12,13 @@ class ServicesTableSeeder extends Seeder {
      */
     public function run() {
         Service::create([
-            'id' => 1,
             'type' => Constants::SERVICE_INSTAGRAM_LIKES,
             'title' => 'Лайки',
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Качественные лайки',
             'requirements' => 'Аккаунт должен быть открытым',
+            'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
             'nakrutka_id' => 1,
@@ -51,13 +51,33 @@ class ServicesTableSeeder extends Seeder {
 
 
         Service::create([
-            'id' => 2,
             'type' => Constants::SERVICE_INSTAGRAM_SUBS,
             'title' => 'Подписчики',
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Качественные подписчики',
             'requirements' => 'Аккаунт должен быть открытым',
+            'info' => ['информация 1', 'информация 2'],
+            'min' => 100,
+            'max' => 10000,
+            'nakrutka_id' => 1,
+            'price' => 0.35,
+            'price_1k' => 0.3,
+            'price_5k' => 0.278,
+            'price_10k' => 0.27,
+            'price_25k' => 0.25,
+            'price_50k' => 0.198,
+            'price_100k' => 0.17,
+        ]);
+
+        Service::create([
+            'type' => Constants::SERVICE_AUTO_FAKE,
+            'title' => 'Вымышленный сервис AUTO FAKE',
+            'startup' => 'до 5 минут',
+            'speed' => '500-1000 в минуту',
+            'details' => 'Не использовать',
+            'requirements' => 'Аккаунт не должен быть',
+            'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
             'nakrutka_id' => 1,
