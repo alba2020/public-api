@@ -1,5 +1,6 @@
 <?php
 
+use App\Cached;
 use App\Role\UserRole;
 use App\Rules\JSONContains;
 use App\Service;
@@ -36,6 +37,7 @@ Route::post('set_password', 'AuthController@setPassword');
 
 Route::get('services', 'ServicesController@index');
 Route::get('services/g', 'ServicesController@indexGrouped');
+Route::get('services/{type}', 'ServicesController@getByType');
 
 Route::get('services/{service_id}/cost/{n}', 'ServicesController@cost');
 Route::post('services/costs', 'ServicesController@costs');
@@ -59,11 +61,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('orders', 'OrdersController@index');
 //    Route::post('orders', 'OrdersController@create');
 
-// details: JSON
-//[
-// {"url": "https://www.instagram.com/p/BxFMFbeAjoL", "n": 102},
-// {"url": "https://www.instagram.com/p/BxFMFbeAjoL", "n": 100}
-//]
+    // создание заказов
     Route::post('orders/service/{service}', 'OrdersController@batchCreate');
 
     Route::group(['middleware' => 'check_user_role:' . UserRole::ROLE_MODERATOR],
@@ -77,21 +75,19 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('users/{id}/transactions', 'UserController@transactions');
 
     // --------------- tasks -------------------
-    Route::get('tasks', 'TasksController@index');
-    Route::get('tasks/{task}', 'TasksController@show');
-    Route::post('tasks', 'TasksController@store');
-    Route::put('tasks/{tasks}', 'TasksController@update');
-    Route::delete('tasks/{task}', 'TasksController@delete');
+//    Route::get('tasks', 'TasksController@index');
+//    Route::get('tasks/{task}', 'TasksController@show');
+//    Route::post('tasks', 'TasksController@store');
+//    Route::put('tasks/{tasks}', 'TasksController@update');
+//    Route::delete('tasks/{task}', 'TasksController@delete');
 
-//    Route::post('tasks/run/fake', 'API\TasksController@runFake');
-//    Route::post('tasks/run/instagram', 'API\TasksController@runInstagram');
-    Route::post('tasks/run/{platform}', 'TasksController@runPlatform');
+//    Route::post('tasks/run/{platform}', 'TasksController@runPlatform');
 
-    Route::post('tasks/reset', 'TasksController@resetAll');
-    Route::post('tasks/undo/{task}', 'TasksController@undo');
+//    Route::post('tasks/reset', 'TasksController@resetAll');
+//    Route::post('tasks/undo/{task}', 'TasksController@undo');
 
     // ----------------- fakes ---------------
-    Route::get('fakes', 'FakesController@index');
+//    Route::get('fakes', 'FakesController@index');
 
     // -- roles --
 
@@ -111,20 +107,12 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::get('cat', function() {
 
-    $svc = app()->make('\App\Services\InstagramScraperService');
+    $svc = resolve('\App\Services\InstagramScraperService');
 
     return response()->json([
-        'cat' => $svc->getCat('hello'),
-    ], 200);
-});
-
-Route::post('cat', function(Request $request) {
-    SMM::validate($request, [
-        'details' => ['required', 'json', new JSONContains('param')],
-    ]);
-
-    return response()->json([
-        'cat' => 'the cat',
+        'danaborisova_official' => $svc->checkLogin('danaborisova_official'),
+        'azagitova' => $svc->checkLogin('azagitova'),
+        'media' => $svc->getMediaCodes('azagitova', 8),
     ], 200);
 });
 
@@ -132,12 +120,3 @@ Route::post('cat', function(Request $request) {
 Route::post('vk/token', 'VKController@token');
 Route::post('fb/token', 'FBController@token');
 
-
-Route::get('/nakrutka', function(Request $request, \App\Services\NakrutkaService $nakrutka) {
-//    $order = $nakrutka->add('http://example.com/test', 100);
-    $v = $request->input('v');
-    // return response()->json($order);
-    return response()->json([
-        'v' => $v
-    ]);
-});

@@ -14,27 +14,36 @@ class Likes extends Order {
     use HasParent;
 
     public static function validate($details) {
-//        dd($details);
 
-        if (!isset($details->url)) {
-            throw MissingParameterException::create(['text' => 'url']);
+        if (!isset($details->link)) {
+            throw MissingParameterException::create(['text' => 'link missing']);
         }
 
-        $scraper = app()->make(InstagramScraperService::class);
-        $scraper->checkMediaURL($details->url);
+        $scraper = resolve(InstagramScraperService::class);
+        $scraper->checkMediaURL($details->link);
 
-        if (!isset($details->n)) {
-            throw MissingParameterException::create(['text' => 'n']);
+        if (!isset($details->quantity)) {
+            throw MissingParameterException::create(['text' => 'quantity missing']);
         }
 
-        if ($details->n < 100) {
+        if ($details->quantity < 100) {
             throw BadParameterException::create([
-                'text' => 'n must be >= 100'
+                'text' => 'quantity must be >= 100'
             ]);
         }
     }
 
+    public static function getImg($link) {
+        $scraper = resolve(InstagramScraperService::class);
+        return $scraper->getMediaImg($link);
+    }
+
+    public static function getInstagramLogin($link) {
+        $scraper = resolve(InstagramScraperService::class);
+        return $scraper->getLoginByMedia($link);
+    }
+
     public function run() {
-        $this->toNakrutka($this->details['url'], $this->details['n']);
+        $this->toNakrutka($this->link, $this->quantity);
     }
 }

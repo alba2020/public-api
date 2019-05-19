@@ -26,6 +26,15 @@ class CreateOrdersTable extends Migration
             // json not supported in MariaDB 10.1
             $table->text('details')->nullable(); // url, n etc.
             $table->boolean('paid')->default('0');
+            $table->text('img')->nullable();
+            $table->string('instagram_login')->nullable();
+
+            $table->text('link')->nullable();
+            $table->integer('foreign_id')->nullable();
+
+            $table->integer('quantity')->default('0');
+            $table->integer('remains')->default('0');
+
             $table->timestamps();
         });
     }

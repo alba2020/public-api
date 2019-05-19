@@ -16,8 +16,8 @@ class SMM {
         }
     }
 
-    public static function success($data) {
-        return response()->json(['success' => $data], Response::HTTP_OK);
+    public static function success($data, $code = Response::HTTP_OK) {
+        return response()->json(['success' => $data], $code);
     }
 
     public static function makeGroups(array $collection, array $groups) {

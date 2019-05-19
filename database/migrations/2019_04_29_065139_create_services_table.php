@@ -20,8 +20,8 @@ class CreateServicesTable extends Migration
 
             $table->string('startup'); // 'до 5 минут'
             $table->string('speed'); // '500-1000 в минуту'
-            $table->string('details'); // детали
-            $table->string('requirements'); // требования к аккаунту
+            $table->string('details')->nullable(); // детали
+            $table->string('requirements')->nullable(); // требования к аккаунту
 
             $table->text('info')->nullable(); // массив инфо
 
@@ -38,6 +38,7 @@ class CreateServicesTable extends Migration
             $table->decimal('price_50k', 19, 4);
             $table->decimal('price_100k', 19, 4);
 
+            $table->string('img')->nullable();
             $table->timestamps();
         });
     }

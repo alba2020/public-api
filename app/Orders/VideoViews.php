@@ -2,26 +2,16 @@
 
 namespace App\Orders;
 
+use App\Exceptions\BadMediaTypeException;
 use App\Exceptions\BadParameterException;
 use App\Exceptions\MissingParameterException;
 use App\Order;
 use App\Services\InstagramScraperService;
-use Symfony\Component\HttpFoundation\Response;
 use Tightenco\Parental\HasParent;
 
-class Subscribers extends Order {
+class VideoViews extends Order {
 
     use HasParent;
-
-    public static function convert($details) {
-        if (isset($details->link)) {
-            $login = $details->link;
-            if (strpos($login, 'instagram.com') !== false) {
-                $tokens = explode('/', $login);
-                $details->link = $tokens[3];
-            }
-        }
-    }
 
     public static function validate($details) {
 
@@ -30,7 +20,11 @@ class Subscribers extends Order {
         }
 
         $scraper = resolve(InstagramScraperService::class);
-        $scraper->checkLogin($details->link);
+        $type = $scraper->getMediaType($details->link);
+
+        if ($type !== "video") { // image
+            throw BadMediaTypeException::create();
+        }
 
         if (!isset($details->quantity)) {
             throw MissingParameterException::create(['text' => 'quantity missing']);
@@ -44,15 +38,18 @@ class Subscribers extends Order {
     }
 
     public static function getImg($link) {
-        $scraper = resolve(InstagramScraperService::class);
-        return $scraper->getProfileImg($link);
+        // like likes
+        return resolve(InstagramScraperService::class)->getMediaImg($link);
     }
 
     public static function getInstagramLogin($link) {
-        return $link;
+        // like likes
+        $scraper = resolve(InstagramScraperService::class);
+        return $scraper->getLoginByMedia($link);
     }
 
     public function run() {
+        // like likes
         $this->toNakrutka($this->link, $this->quantity);
     }
 }

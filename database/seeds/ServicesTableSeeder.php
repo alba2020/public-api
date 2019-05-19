@@ -21,7 +21,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 1,
+            'nakrutka_id' => 55,
             'price' => 0.05,
             'price_1k' => 0.045,
             'price_5k' => 0.042,
@@ -30,25 +30,6 @@ class ServicesTableSeeder extends Seeder {
             'price_50k' => 0.035,
             'price_100k' => 0.035,
         ]);
-
-//        Service::create([
-//            'id' => 2,
-//            'type' => Constants::SERVICE_INSTAGRAM_LIKES_SPREAD,
-//            'title' => 'Лайки на несколько публикаций',
-//            'startup' => 'до 5 минут',
-//            'speed' => '500-1000 в минуту',
-//            'min' => 100,
-//            'max' => 10000,
-//            'nakrutka_id' => 1,
-//            'price' => 0.05,
-//            'price_1k' => 0.045,
-//            'price_5k' => 0.042,
-//            'price_10k' => 0.039,
-//            'price_25k' => 0.038,
-//            'price_50k' => 0.035,
-//            'price_100k' => 0.035,
-//        ]);
-
 
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_SUBS,
@@ -60,7 +41,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 1,
+            'nakrutka_id' => 55,
             'price' => 0.35,
             'price_1k' => 0.3,
             'price_5k' => 0.278,
@@ -80,7 +61,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 1,
+            'nakrutka_id' => 55,
             'price' => 0.35,
             'price_1k' => 0.3,
             'price_5k' => 0.278,
@@ -90,24 +71,23 @@ class ServicesTableSeeder extends Seeder {
             'price_100k' => 0.17,
         ]);
 
-//        Service::create([
-//            'id' => 3,
-//            'type' => Constants::SERVICE_INSTAGRAM_VIEWS,
-//            'title' => 'Просмотры',
-//            'startup' => 'до 5 минут',
-//            'speed' => '500-1000 в минуту',
-//            'min' => 100,
-//            'max' => 10000,
-//            'nakrutka_id' => 1,
-//            'price' => 0.04,
-//            'price_1k' => 0.035,
-//            'price_5k' => 0.033,
-//            'price_10k' => 0.03,
-//            'price_25k' => 0.03,
-//            'price_50k' => 0.026,
-//            'price_100k' => 0.025,
-//        ]);
-//
+        Service::create([
+            'type' => Constants::SERVICE_INSTAGRAM_VIDEO_VIEWS,
+            'title' => 'Просмотры видео',
+            'startup' => 'до 5 минут',
+            'speed' => '500-1000 в минуту',
+            'min' => 100,
+            'max' => 10000,
+            'nakrutka_id' => 55,
+            'price' => 0.04,
+            'price_1k' => 0.035,
+            'price_5k' => 0.033,
+            'price_10k' => 0.03,
+            'price_25k' => 0.03,
+            'price_50k' => 0.026,
+            'price_100k' => 0.025,
+        ]);
+
 //        Service::create([
 //            'id' => 4,
 //            'type' => Constants::SERVICE_INSTAGRAM_AUTOLIKES,

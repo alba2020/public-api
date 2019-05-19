@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Cached;
 use App\Http\Middleware\CheckUserRole;
 use App\Role\RoleChecker;
 use App\Services\FakeService;
@@ -54,8 +55,8 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
-        app()->bind(InstagramScraperService::class, function () {
-            return new InstagramScraperService();
+        app()->singleton(InstagramScraperService::class, function () {
+            return new Cached(new InstagramScraperService());
         });
     }
 

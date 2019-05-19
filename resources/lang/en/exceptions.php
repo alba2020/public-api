@@ -20,5 +20,6 @@ return [
     'bad_parameter' => 'Bad parameter',
     'private_account' => 'Account is private',
     'not_enough_media' => 'Not enough media',
-    'foreign_service' => 'Foreign service exception',
+    'foreign_service' => 'Foreign service error',
+    'bad_media_type' => 'Bad media type',
 ];

@@ -21,4 +21,5 @@ return [
     'private_account' => 'Приватный аккаунт',
     'not_enough_media' => 'Недостаточно публикаций',
     'foreign_service' => 'Ошибка стороннего сервиса',
+    'bad_media_type' => 'Неверный тип медиа',
 ];

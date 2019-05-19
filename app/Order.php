@@ -50,22 +50,35 @@ class Order extends BaseModel {
         return;
     }
 
+    public static function validate($details) {
+        return true;
+    }
+
     public static function makeUUID() {
         return md5(uniqid());
     }
 
-    public static function make($service, $user, $details) {
-        $price = $service->getPrice($details->n);
-        $cost = $service->getCost($details->n);
+    public static function getImg($details) {
+        return '';
+    }
 
+    public static function getInstagramLogin($details) {
+        return '';
+    }
+
+    public static function make($service, $user, $link, $quantity) {
         try {
             $order = static::create([
                 'uuid' => self::makeUUID(),
                 'user_id' => $user->id,
                 'service_id' => $service->id,
-                'details' => (array) $details,
-                'price' => $price,
-                'cost' => $cost,
+//                'details' => (array) $details,
+                'link' => $link,
+                'quantity' => $quantity,
+                'price' => $service->getPrice($quantity), // цена за 1 шт
+                'cost' => $service->getCost($quantity), // общая стоимость
+                'img' => static::getImg($link),
+                'instagram_login' => static::getInstagramLogin($link),
             ]);
 
             $order->refresh(); // load defaults from db
@@ -94,7 +107,7 @@ class Order extends BaseModel {
     }
 
     public function toNakrutka($link, $quantity) {
-        $nakrutka = app()->make(NakrutkaService::class);
+        $nakrutka = resolve(NakrutkaService::class);
         $service = Service::findOrFail($this->service_id);
         $nakrutka->setApiService($service->nakrutka_id);
 
@@ -104,30 +117,28 @@ class Order extends BaseModel {
             throw ForeignServiceException::create(['text' => 'nakrutka did not return order']);
         }
 
-        $this->details = $this->details + ['nakrutka_id' => $response->order];
+        $this->foreign_id = $response->order;
         $this->status = Order::STATUS_RUNNING;
         $this->save();
     }
 
-    // получить id заказа во внешнем сервисе
-    public function getForeignId() {
-        return $this->details['nakrutka_id'];
-    }
-
     // проверить статус заказа по ответу внешнего сервиса
-    public function changeStatus($response) {
-        $nid = $this->getForeignId();
-        $newStatus = self::convertStatus($response->$nid->status);
-        $this->status = $newStatus;
+    public function updateData($response) {
+//        echo "update order id $this->id\n";
 
-        if ($newStatus === static::STATUS_PARTIAL_COMPLETED) {
-            $remains = $response->$nid->remains;
-            $refund = $remains * $this->price;
+        $foreign_id = $this->foreign_id;
+        $this->status = self::convertStatus($response->$foreign_id->status);
+        $this->remains = $response->$foreign_id->remains;
+
+//        echo "this->remains = $this->remains\n";
+
+        if ($this->status === static::STATUS_PARTIAL_COMPLETED) {
+            $refund = $this->remains * $this->price; // возврат
 
             $this->wallet->applyTransaction(
                 Transaction::INFLOW_REFUND,
                 $refund,
-                "Order id: $this->id uuid: $this->uuid remains: $remains"
+                "Order id: $this->id uuid: $this->uuid remains: $this->remains"
             );
         }
         $this->save();

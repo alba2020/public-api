@@ -22,6 +22,16 @@ class ServicesController extends Controller {
         return response()->json($o, Response::HTTP_OK);
     }
 
+    public function getByType($type) {
+        $service = Service::where('type', $type)->first();
+
+        if(!$service) {
+            throw EntityNotFoundException::create(['text' => 'Service not found']);
+        }
+
+        return SMM::success($service);
+    }
+
     /**
      * @param $service_id
      * @param $n
