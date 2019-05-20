@@ -14,8 +14,7 @@ class Cached {
         $this->timeToLive = 5; // min
     }
 
-    public function __call($method, $args)
-    {
+    public function __call($method, $args) {
         $key = "_" . $method;
 
         foreach ($args as $arg) {

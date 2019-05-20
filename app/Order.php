@@ -40,7 +40,7 @@ class Order extends BaseModel {
         $order = Order::where('uuid', $uuid)->first();
         if (!$order) {
             throw EntityNotFoundException::create([
-                'text' => 'Order not found by uuid'
+                'text' => "Order not found by uuid $uuid",
             ]);
         }
         return $order;
