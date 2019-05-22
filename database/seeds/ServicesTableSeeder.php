@@ -11,6 +11,17 @@ class ServicesTableSeeder extends Seeder {
      * @return void
      */
     public function run() {
+
+//        Быстрые лайки - like
+//        Просмотры видео - media-player
+//        Просмотры видео с охватом - videos-coverage
+//        Просмотры Story - story
+//        Подписчики высокого качества - subs
+//        Подписчики с автовосстановлением - network
+//        Автолайки - autolike
+//        Автопросмотры - autowatch
+//        Автолайки + автопросмотры + охват - advertising
+
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_LIKES,
             'title' => 'Лайки',
@@ -29,6 +40,7 @@ class ServicesTableSeeder extends Seeder {
             'price_25k' => 0.038,
             'price_50k' => 0.035,
             'price_100k' => 0.035,
+            'img' => '/svg/like.svg',
         ]);
 
         Service::create([
@@ -49,6 +61,7 @@ class ServicesTableSeeder extends Seeder {
             'price_25k' => 0.25,
             'price_50k' => 0.198,
             'price_100k' => 0.17,
+            'img' => '/svg/subs.svg',
         ]);
 
         Service::create([
@@ -86,6 +99,7 @@ class ServicesTableSeeder extends Seeder {
             'price_25k' => 0.03,
             'price_50k' => 0.026,
             'price_100k' => 0.025,
+            'img' => '/svg/media-player.svg',
         ]);
 
 //        Service::create([

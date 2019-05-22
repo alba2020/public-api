@@ -3095,16 +3095,16 @@
         },
         {
             "name": "raiym/instagram-php-scraper",
-            "version": "v0.8.29",
+            "version": "v0.8.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/postaddictme/instagram-php-scraper.git",
-                "reference": "b3727f1a40a67719da5b5a37c5d68d2ff2be2318"
+                "reference": "a3a5bba508c450ed97758069309e2430351e788e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/postaddictme/instagram-php-scraper/zipball/b3727f1a40a67719da5b5a37c5d68d2ff2be2318",
-                "reference": "b3727f1a40a67719da5b5a37c5d68d2ff2be2318",
+                "url": "https://api.github.com/repos/postaddictme/instagram-php-scraper/zipball/a3a5bba508c450ed97758069309e2430351e788e",
+                "reference": "a3a5bba508c450ed97758069309e2430351e788e",
                 "shasum": ""
             },
             "require": {
@@ -3119,8 +3119,8 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "InstagramScraper": "src"
+                "psr-4": {
+                    "InstagramScraper\\": "src/InstagramScraper/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3139,7 +3139,7 @@
                 "instagram",
                 "scraper"
             ],
-            "time": "2019-05-17T08:39:08+00:00"
+            "time": "2019-05-21T04:08:45+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
