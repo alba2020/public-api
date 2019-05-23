@@ -31,6 +31,17 @@ class NakrutkaService
         return $this->order($data);
     }
 
+    public function addSub($username, $qmin, $qmax, $posts, $delay) {
+        $order = $this->order([
+           'username' => $username,
+           'min' => $qmin,
+           'max' => $qmax,
+           'posts' => $posts,
+           'delay' => $delay,
+        ]);
+        return $order;
+    }
+
     public function status($order_id) { // get order status
         return json_decode($this->connect(array(
             'key' => $this->api_key,

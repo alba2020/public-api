@@ -1,5 +1,7 @@
 <?php
 
-class IGTV {
-    
+namespace App\Orders;
+
+class IGTVViews {
+
 }

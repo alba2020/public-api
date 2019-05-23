@@ -35,6 +35,12 @@ class CreateOrdersTable extends Migration
             $table->integer('quantity')->default('0');
             $table->integer('remains')->default('0');
 
+            $table->string('username')->nullable();
+            $table->integer('qmin')->nullable();
+            $table->integer('qmax')->nullable();
+            $table->integer('posts')->nullable();
+            $table->integer('delay')->nullable();
+
             $table->timestamps();
         });
     }

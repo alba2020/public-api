@@ -15,38 +15,32 @@ class StoryViews extends Order {
 
     public static function validate($details) {
 
-//        if (!isset($details->link)) {
-//            throw MissingParameterException::create(['text' => 'link missing']);
-//        }
-//
-//        $scraper = resolve(InstagramScraperService::class);
-//        $type = $scraper->getMediaType($details->link);
-//
-//        if ($type !== "video") { // image
-//            throw BadMediaTypeException::create();
-//        }
-//
-//        if (!isset($details->quantity)) {
-//            throw MissingParameterException::create(['text' => 'quantity missing']);
-//        }
-//
-//        if ($details->quantity < 100) {
-//            throw BadParameterException::create([
-//                'text' => 'quantity must be >= 100'
-//            ]);
-//        }
+        // link == login
+
+        if (!isset($details->link)) {
+            throw MissingParameterException::create(['text' => 'link missing']);
+        }
+
+        if (!isset($details->quantity)) {
+            throw MissingParameterException::create(['text' => 'quantity missing']);
+        }
+
+        if ($details->quantity < 100) {
+            throw BadParameterException::create([
+                'text' => 'quantity must be >= 100'
+            ]);
+        }
     }
 
     public static function getImg($link) {
-        // return resolve(InstagramScraperService::class)->getMediaImg($link);
+        return resolve(InstagramScraperService::class)->getProfileImg($link);
     }
 
     public static function getInstagramLogin($link) {
-//        $scraper = resolve(InstagramScraperService::class);
-//        return $scraper->getLoginByMedia($link);
+        return $link;
     }
 
     public function run() {
-//        $this->toNakrutka($this->link, $this->quantity);
+        $this->toNakrutka($this->link, $this->quantity);
     }
 }
