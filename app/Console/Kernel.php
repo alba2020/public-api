@@ -32,6 +32,8 @@ class Kernel extends ConsoleKernel {
 
 //        $schedule->command('smm:get_statuses --save')->everyMinute();
 
+        $schedule->command('smm:update_orders --save')->everyMinute();
+
 //        $schedule->command('smm:take1')->everyMinute();
 //        $schedule->command('smm:take5')->everyFiveMinutes();
 //        $schedule->command('smm:take10')->everyTenMinutes();

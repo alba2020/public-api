@@ -41,7 +41,11 @@ class UserController extends Controller {
         if(!$user) {
             throw UserNotFoundException::create(['id' => $id]);
         }
-        $orders = $user->orders()->get()->all();
+//        $orders = $user->orders()->get()->all();
+        $orders = Order::where('user_id', $user->id)
+                        ->with('service')
+                        ->get()
+                        ->all();
         $o = SMM::makeGroups($orders, ['instagram', 'vk', 'auto']);
         return response()->json($o, Response::HTTP_OK);
     }
