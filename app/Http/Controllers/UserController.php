@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\UserNotFoundException;
+use App\Order;
 use App\SMM;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,11 @@ class UserController extends Controller {
         if(!$user) {
             throw UserNotFoundException::create(['id' => $id]);
         }
-        return $user->orders()->get()->all();
+        return Order::where('user_id', $user->id)
+            ->with('service')
+            ->get()
+            ->all();
+//        return $user->orders()->get()->all();
     }
 
     public function ordersGrouped($id) {
