@@ -23,23 +23,28 @@ class CreateOrdersTable extends Migration
             $table->decimal('cost', 19, 4)->default('0.00');
             $table->decimal('price', 19, 4)->default('0.00');
             $table->string('status')->default(Order::STATUS_CREATED);
+
             // json not supported in MariaDB 10.1
+            // array
             $table->text('details')->nullable(); // url, n etc.
+
             $table->boolean('paid')->default('0');
             $table->text('img')->nullable();
             $table->string('instagram_login')->nullable();
 
-            $table->text('link')->nullable();
+//            $table->text('link')->nullable();
             $table->integer('foreign_id')->nullable();
+            // array
+            $table->text('foreign_status')->nullable();
 
-            $table->integer('quantity')->default('0');
-            $table->integer('remains')->default('0');
+//          $table->integer('quantity')->default('0');
+//          $table->integer('remains')->default('0');
 
-            $table->string('username')->nullable();
-            $table->integer('qmin')->nullable();
-            $table->integer('qmax')->nullable();
-            $table->integer('posts')->nullable();
-            $table->integer('delay')->nullable();
+//            $table->string('username')->nullable();
+//            $table->integer('qmin')->nullable();
+//            $table->integer('qmax')->nullable();
+//            $table->integer('posts')->nullable();
+//            $table->integer('delay')->nullable();
 
             $table->timestamps();
         });

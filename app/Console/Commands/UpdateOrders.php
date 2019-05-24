@@ -52,16 +52,15 @@ class UpdateOrders extends Command
             $req[] = $order->foreign_id;//add nakrutka ids to request
         }
 
-        $nakrutka = resolve(NakrutkaService::class);
-        $res = $nakrutka->multiStatus($req);
+        $response = resolve(NakrutkaService::class)->multiStatus($req);
 
         foreach($runningOrders as $order) {
             $foreign_id = $order->foreign_id;
-            $n_status = $res->$foreign_id->status;
-            echo "order $order->id $order->uuid $foreign_id $order->status $n_status\n";
+            $foreign_status = $response->$foreign_id->status;
+            echo "order $order->id $order->uuid $foreign_id $order->status $foreign_status\n";
 
             if ($this->option('save')) {
-                $order->updateData($res);
+                $order->updateData($response);
             }
         }
 
@@ -70,11 +69,9 @@ class UpdateOrders extends Command
         // Processing -
 
         // Partial - частично выполнен. возврат.
-
         // Canceled - отменен
-
         // Completed - выполнен
 
-        print_r($res);
+        print_r($response);
     }
 }

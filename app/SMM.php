@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Exceptions\BadParameterException;
+use App\Exceptions\MissingParameterException;
 use App\Exceptions\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -30,5 +32,28 @@ class SMM {
             }));
         }
         return $o;
+    }
+
+    public static function withLink($details) {
+        if (!isset($details->link)) {
+            throw MissingParameterException::create(['text' => 'link missing']);
+        }
+        return $details;
+    }
+
+    public static function withQuantity($details) {
+        if (!isset($details->quantity)) {
+            throw MissingParameterException::create(['text' => 'quantity missing']);
+        }
+        return $details;
+    }
+
+    public static function withMinQuantity100($details) {
+        if ($details->quantity < 100) {
+            throw BadParameterException::create([
+                'text' => 'quantity must be >= 100'
+            ]);
+        }
+        return $details;
     }
 }

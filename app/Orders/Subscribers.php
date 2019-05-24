@@ -2,16 +2,19 @@
 
 namespace App\Orders;
 
-use App\Exceptions\BadParameterException;
-use App\Exceptions\MissingParameterException;
 use App\Order;
+use App\Orders\Traits\DefaultPriceAndCost;
+use App\Orders\Traits\DefaultRun;
+use App\Orders\Traits\ImageFromProfile;
+use App\Orders\Traits\LoginFromLink;
 use App\Services\InstagramScraperService;
-use Symfony\Component\HttpFoundation\Response;
+use App\SMM;
 use Tightenco\Parental\HasParent;
 
 class Subscribers extends Order {
 
     use HasParent;
+    use DefaultPriceAndCost, ImageFromProfile, LoginFromLink, DefaultRun;
 
     public static function convert($details) {
         if (isset($details->link)) {
@@ -25,34 +28,9 @@ class Subscribers extends Order {
 
     public static function validate($details) {
 
-        if (!isset($details->link)) {
-            throw MissingParameterException::create(['text' => 'link missing']);
-        }
+        SMM::withMinQuantity100(SMM::withQuantity(SMM::withLink($details)));
 
         $scraper = resolve(InstagramScraperService::class);
         $scraper->checkLogin($details->link);
-
-        if (!isset($details->quantity)) {
-            throw MissingParameterException::create(['text' => 'quantity missing']);
-        }
-
-        if ($details->quantity < 100) {
-            throw BadParameterException::create([
-                'text' => 'quantity must be >= 100'
-            ]);
-        }
-    }
-
-    public static function getImg($link) {
-        $scraper = resolve(InstagramScraperService::class);
-        return $scraper->getProfileImg($link);
-    }
-
-    public static function getInstagramLogin($link) {
-        return $link;
-    }
-
-    public function run() {
-        $this->toNakrutka($this->link, $this->quantity);
     }
 }

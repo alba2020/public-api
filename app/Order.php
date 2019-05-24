@@ -5,6 +5,7 @@ namespace App;
 use App\Exceptions\EntityNotFoundException;
 use App\Exceptions\ForeignServiceException;
 use App\Exceptions\InsufficientFundsException;
+use App\Exceptions\MissingParameterException;
 use App\Exceptions\ServerException;
 use App\Services\NakrutkaService;
 use Tightenco\Parental\HasChildren;
@@ -25,6 +26,7 @@ class Order extends BaseModel {
 
     protected $casts = [
         'details' => 'array',
+        'foreign_status' => 'array',
         'paid' => 'boolean',
     ];
 
@@ -58,6 +60,14 @@ class Order extends BaseModel {
         return md5(uniqid());
     }
 
+    public static function getPrice($service, $details) {
+        return 0;
+    }
+
+    public static function getCost($service, $details) {
+        return 0;
+    }
+
     public static function getImg($details) {
         return '';
     }
@@ -66,19 +76,29 @@ class Order extends BaseModel {
         return '';
     }
 
-    public static function make($service, $user, $link, $quantity) {
+    public static function make($service, $user, $details) {
+
+// link, quantity,
+// or
+// username, min, max, posts, delay
+
         try {
             $order = static::create([
                 'uuid' => self::makeUUID(),
                 'user_id' => $user->id,
                 'service_id' => $service->id,
-//                'details' => (array) $details,
-                'link' => $link,
-                'quantity' => $quantity,
-                'price' => $service->getPrice($quantity), // цена за 1 шт
-                'cost' => $service->getCost($quantity), // общая стоимость
-                'img' => static::getImg($link),
-                'instagram_login' => static::getInstagramLogin($link),
+                'details' => (array) $details,
+
+//                'link' => $link,
+//                'quantity' => $quantity,
+//                'price' => $service->getPrice($quantity), // цена за 1 шт
+//                'cost' => $service->getCost($quantity), // общая стоимость
+//                'img' => static::getImg($link),
+//                'instagram_login' => static::getInstagramLogin($link),
+                'price' => static::getPrice($service, $details),
+                'cost' => static::getCost($service, $details),
+                'img' => static::getImg($details),
+                'instagram_login' => static::getInstagramLogin($details),
             ]);
 
             $order->refresh(); // load defaults from db
@@ -106,39 +126,31 @@ class Order extends BaseModel {
         $this->save();
     }
 
-    public function toNakrutka($link, $quantity) {
-        $nakrutka = resolve(NakrutkaService::class);
-        $service = Service::findOrFail($this->service_id);
-        $nakrutka->setApiService($service->nakrutka_id);
-
-        $link = rand(1, 10000);
-        $response = $nakrutka->add('http://[BAD_URL]' . $link, $quantity);
-        if (!isset($response->order)) {
-            throw ForeignServiceException::create(['text' => 'nakrutka did not return order']);
-        }
-
-        $this->foreign_id = $response->order;
-        $this->status = Order::STATUS_RUNNING;
-        $this->save();
-    }
-
     // проверить статус заказа по ответу внешнего сервиса
     public function updateData($response) {
 //        echo "update order id $this->id\n";
 
         $foreign_id = $this->foreign_id;
         $this->status = self::convertStatus($response->$foreign_id->status);
-        $this->remains = $response->$foreign_id->remains;
+
+        if (!isset($response->$foreign_id->remains)) {
+            throw MissingParameterException::create(['text' => 'remains missing']);
+        }
+
+        $this->foreign_status = (array) $response->$foreign_id;
+
+//        $this->remains = $response->$foreign_id->remains;
 
 //        echo "this->remains = $this->remains\n";
 
         if ($this->status === static::STATUS_PARTIAL_COMPLETED) {
-            $refund = $this->remains * $this->price; // возврат
+            $remains = $this->foreign_status['remains'];
+            $refund = $remains * $this->price; // возврат
 
             $this->wallet->applyTransaction(
                 Transaction::INFLOW_REFUND,
                 $refund,
-                "Order id: $this->id uuid: $this->uuid remains: $this->remains"
+                "Order id: $this->id uuid: $this->uuid remains: $remains"
             );
         }
         $this->save();

@@ -51,13 +51,12 @@ class OrdersController extends Controller {
         $createdOrders = [];
         $totalCost = 0;
 
-        foreach($ordersData as $orderData) {
-            $orderClass::convert($orderData);
-            $orderClass::validate($orderData);
+        foreach($ordersData as $details) {
+            $orderClass::convert($details);
+            $orderClass::validate($details);
         }
-        foreach($ordersData as $orderData) {
-            $newOrder = $orderClass::make($service, $user, $orderData->link,
-                                            $orderData->quantity);
+        foreach($ordersData as $details) {
+            $newOrder = $orderClass::make($service, $user, (array)$details);
             $createdOrders[] = $newOrder;
             $totalCost += $newOrder->cost;
         }
