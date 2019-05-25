@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-//        $schedule->exec('touch foo.txt')->everyMinute();
+        $schedule->exec('touch token')->everyMinute();
         // $schedule->command('inspire')
         //          ->hourly();
 

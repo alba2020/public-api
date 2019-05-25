@@ -8,6 +8,7 @@ class Service extends BaseModel {
 
     protected $casts = [
         'info' => 'array',
+        'price_list' => 'array',
     ];
 
     public static function getByType(string $type) {
@@ -19,23 +20,17 @@ class Service extends BaseModel {
     }
 
     public function getPrice($n) {
-        if ($n < 1000) {
-            return $this->price;
-        } else if ($n < 5000) {
-            return $this->price_1k;
-        } else if ($n < 10000) {
-            return $this->price_5k;
-        } else if ($n < 25000) {
-            return $this->price_10k;
-        } else if ($n < 50000) {
-            return $this->price_25k;
-        } else if ($n < 100000) {
-            return $this->price_50k;
-        } else if ($n >= 100000) {
-            return $this->price_100k;
-        } else {
-            return $this->price;
+        $price = $this->price_list[1];
+        $list = $this->price_list;
+        ksort($list);
+        foreach ($list as $k => $v) {
+            if ($n < $k) {
+                break;
+            } else {
+                $price = $v;
+            }
         }
+        return $price;
     }
 
     /**

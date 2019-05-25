@@ -16,9 +16,9 @@ class OrdersTableSeeder extends Seeder
     {
         Order::truncate();
 
-        factory(Order::class, 8)->create([
-           'user_id' => 102,
-        ]);
+//        factory(Order::class, 8)->create([ // fakes
+//           'user_id' => 102,
+//        ]);
 
 //        $vkFake = Service::getByType(Constants::SERVICE_VK_FAKE);
 //        factory(Order::class, 5)->make([

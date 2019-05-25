@@ -103,7 +103,11 @@ class Order extends BaseModel {
 
             $order->refresh(); // load defaults from db
         } catch (\Exception $e) {
-            throw ServerException::create(['text' => $e->getMessage()]);
+            throw ServerException::create([
+                'text' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
         }
 
         return $order;
@@ -133,26 +137,28 @@ class Order extends BaseModel {
         $foreign_id = $this->foreign_id;
         $this->status = self::convertStatus($response->$foreign_id->status);
 
-        if (!isset($response->$foreign_id->remains)) {
-            throw MissingParameterException::create(['text' => 'remains missing']);
+        if (isset($response->$foreign_id->remains)) { // default
+            $remains = $response->$foreign_id->remains;
+            $refund = $remains * $this->price; // возврат
+        } else if (isset($response->$foreign_id->posts)) { // subscriptions
+            $total_posts = $this->details['posts'];
+            $completed_posts = $response->$foreign_id->posts;
+            $incomplete = ($total_posts - $completed_posts) / $total_posts;
+            $refund = $this->cost * $incomplete;
         }
 
-        $this->foreign_status = (array) $response->$foreign_id;
-
 //        $this->remains = $response->$foreign_id->remains;
-
 //        echo "this->remains = $this->remains\n";
 
         if ($this->status === static::STATUS_PARTIAL_COMPLETED) {
-            $remains = $this->foreign_status['remains'];
-            $refund = $remains * $this->price; // возврат
-
             $this->wallet->applyTransaction(
                 Transaction::INFLOW_REFUND,
                 $refund,
-                "Order id: $this->id uuid: $this->uuid remains: $remains"
+                "Order id: $this->id uuid: $this->uuid cost: $this->cost refund: $refund"
             );
         }
+
+        $this->foreign_status = (array) $response->$foreign_id;
         $this->save();
     }
 
@@ -161,6 +167,9 @@ class Order extends BaseModel {
             'In progress' => static::STATUS_RUNNING,
             'Pending' => static::STATUS_RUNNING,
             'Processing' => static::STATUS_RUNNING,
+
+            'Active' => static::STATUS_RUNNING,
+
             'Partial' => static::STATUS_PARTIAL_COMPLETED,
             'Canceled' => static::STATUS_CANCELED,
             'Completed' => static::STATUS_COMPLETED,

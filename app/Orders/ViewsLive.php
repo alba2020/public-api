@@ -5,11 +5,11 @@ namespace App\Orders;
 use App\Order;
 use App\Orders\Traits\DefaultPriceAndCost;
 use App\Orders\Traits\DefaultRun;
-use App\Orders\Traits\LinkAsMedia;
+use App\Orders\Traits\LinkAsLogin;
 use Tightenco\Parental\HasParent;
 
-class Likes extends Order {
+class ViewsLive extends Order {
 
     use HasParent;
-    use DefaultPriceAndCost, LinkAsMedia, DefaultRun;
+    use DefaultPriceAndCost, LinkAsLogin, DefaultRun;
 }

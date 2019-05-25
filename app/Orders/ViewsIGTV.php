@@ -8,7 +8,7 @@ use App\Orders\Traits\DefaultRun;
 use App\Orders\Traits\LinkAsMedia;
 use Tightenco\Parental\HasParent;
 
-class Likes extends Order {
+class ViewsIGTV extends Order {
 
     use HasParent;
     use DefaultPriceAndCost, LinkAsMedia, DefaultRun;

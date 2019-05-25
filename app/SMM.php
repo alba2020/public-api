@@ -56,4 +56,28 @@ class SMM {
         }
         return $details;
     }
+
+    public static function withUsername($details) {
+        if (!isset($details->username)) {
+            throw MissingParameterException::create(['text' => 'username missing']);
+        }
+        return $details;
+    }
+
+    public static function withMinAndMax($details) {
+        if (!isset($details->min)) {
+            throw MissingParameterException::create(['text' => 'min missing']);
+        }
+        if (!isset($details->max)) {
+            throw MissingParameterException::create(['text' => 'max missing']);
+        }
+        return $details;
+    }
+
+    public static function withPosts($details) {
+        if (!isset($details->posts)) {
+            throw MissingParameterException::create(['text' => 'posts missing']);
+        }
+        return $details;
+    }
 }

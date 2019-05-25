@@ -31,11 +31,12 @@ class NakrutkaService
         return $this->order($data);
     }
 
-    public function addSub($username, $qmin, $qmax, $posts, $delay) {
+    public function addSub($username, $min, $max, $posts, $delay) {
         $order = $this->order([
+           'service' => $this->api_service,
            'username' => $username,
-           'min' => $qmin,
-           'max' => $qmax,
+           'min' => $min,
+           'max' => $max,
            'posts' => $posts,
            'delay' => $delay,
         ]);

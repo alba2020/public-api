@@ -30,6 +30,9 @@ class CreateServicesTable extends Migration
 
             $table->integer('nakrutka_id');
 
+            // array
+            $table->text('price_list')->nullable();
+
             $table->decimal('price', 19, 4);
             $table->decimal('price_1k', 19, 4);
             $table->decimal('price_5k', 19, 4);

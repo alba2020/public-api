@@ -8,8 +8,13 @@ use App\Orders\Traits\DefaultRun;
 use App\Orders\Traits\LinkAsMedia;
 use Tightenco\Parental\HasParent;
 
-class Likes extends Order {
+class ViewsVideo extends Order {
 
     use HasParent;
     use DefaultPriceAndCost, LinkAsMedia, DefaultRun;
+
+//    todo
+//    if ($type !== "video") { // image
+//        throw BadMediaTypeException::create();
+//    }
 }

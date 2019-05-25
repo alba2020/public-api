@@ -17,8 +17,8 @@ trait DefaultRun {
         $service = Service::findOrFail($this->service_id);
         $nakrutka->setApiService($service->nakrutka_id);
 
-        $link = rand(1, 10000);
-        $response = $nakrutka->add('http://[BAD_URL]' . $link, $quantity);
+        $link = str_random(16) . '_bad_url';
+        $response = $nakrutka->add($link, $quantity);
         if (!isset($response->order)) {
             throw ForeignServiceException::create(['text' => 'nakrutka did not return order']);
         }
