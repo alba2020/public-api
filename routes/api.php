@@ -107,12 +107,17 @@ Route::group(['middleware' => 'auth:api'], function() {
 
 Route::get('cat', function() {
 
-    $svc = resolve('\App\Services\InstagramScraperService');
+//    $svc = resolve('\App\Services\InstagramScraperService'); // cache not working
+
+    $svc = resolve(\App\Services\InstagramScraperService::class); // cache working
 
     return response()->json([
         'danaborisova_official' => $svc->checkLogin('danaborisova_official'),
         'azagitova' => $svc->checkLogin('azagitova'),
-        'media' => $svc->getMediaCodes('azagitova', 8),
+        'official_juliavolkova' => $svc->checkLogin('official_juliavolkova'),
+        'media_dana' => $svc->getMediaCodes('danaborisova_official', 2),
+        'media_alina' => $svc->getMediaCodes('azagitova', 2),
+        'media_julia' => $svc->getMediaCodes('official_juliavolkova', 2),
     ], 200);
 });
 

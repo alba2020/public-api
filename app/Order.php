@@ -21,6 +21,7 @@ class Order extends BaseModel {
     const STATUS_ERROR = 'STATUS_ERROR';
     const STATUS_CANCELED = 'STATUS_CANCELED';
     const STATUS_UNKNOWN = 'STATUS_UNKNOWN';
+    const STATUS_PAUSED = 'STATUS_PAUSED';
 
     protected $childTypes = Constants::subclasses;
 
@@ -139,12 +140,15 @@ class Order extends BaseModel {
 
         if (isset($response->$foreign_id->remains)) { // default
             $remains = $response->$foreign_id->remains;
-            $refund = $remains * $this->price; // возврат
+            $incomplete = $remains / $this->details['quantity'];
+            $refund = $incomplete * $this->cost; // возврат
+            $refund = round($refund, 2, PHP_ROUND_HALF_DOWN);
         } else if (isset($response->$foreign_id->posts)) { // subscriptions
             $total_posts = $this->details['posts'];
             $completed_posts = $response->$foreign_id->posts;
             $incomplete = ($total_posts - $completed_posts) / $total_posts;
             $refund = $this->cost * $incomplete;
+            $refund = round($refund, 2, PHP_ROUND_HALF_DOWN);
         }
 
 //        $this->remains = $response->$foreign_id->remains;
@@ -169,6 +173,7 @@ class Order extends BaseModel {
             'Processing' => static::STATUS_RUNNING,
 
             'Active' => static::STATUS_RUNNING,
+            'Paused' => static::STATUS_PAUSED,
 
             'Partial' => static::STATUS_PARTIAL_COMPLETED,
             'Canceled' => static::STATUS_CANCELED,

@@ -33,13 +33,13 @@ class CreateServicesTable extends Migration
             // array
             $table->text('price_list')->nullable();
 
-            $table->decimal('price', 19, 4);
-            $table->decimal('price_1k', 19, 4);
-            $table->decimal('price_5k', 19, 4);
-            $table->decimal('price_10k', 19, 4);
-            $table->decimal('price_25k', 19, 4);
-            $table->decimal('price_50k', 19, 4);
-            $table->decimal('price_100k', 19, 4);
+//            $table->decimal('price', 19, 4);
+//            $table->decimal('price_1k', 19, 4);
+//            $table->decimal('price_5k', 19, 4);
+//            $table->decimal('price_10k', 19, 4);
+//            $table->decimal('price_25k', 19, 4);
+//            $table->decimal('price_50k', 19, 4);
+//            $table->decimal('price_100k', 19, 4);
 
             $table->string('img')->nullable();
             $table->timestamps();

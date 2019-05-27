@@ -38,6 +38,7 @@ class SMMAuthService
             $user = User::create(['fb_id' => $fb_id]);
         }
         $user->fb_token = $fb_token;
+//        http://graph.facebook.com/2494710333882182/picture
         $user->save();
 
         $token = $user->createToken('MyApp')->accessToken;
