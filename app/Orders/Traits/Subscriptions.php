@@ -51,7 +51,7 @@ trait Subscriptions {
         $service = Service::findOrFail($this->service_id);
         $nakrutka->setApiService($service->nakrutka_id);
 
-        $username = str_random(16) . '_bad_name';
+//        $username = str_random(16) . '_bad_name';
         $response = $nakrutka->addSub($username, $min, $max, $posts, $delay);
         if (!isset($response->order)) {
             throw ForeignServiceException::create([
