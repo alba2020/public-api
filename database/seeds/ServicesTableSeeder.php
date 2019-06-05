@@ -32,7 +32,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 52,
             'price_list' => [
                 1 => 0.35,
                 1000 => 0.3,
@@ -62,7 +62,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 2,
             'price_list' => [
                 1 => 0.05,
                 1000 => 0.045,
@@ -92,7 +92,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 42,
             'price_list' => [
                 1 => 0.07,
                 1000 => 0.07,
@@ -122,7 +122,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 39,
             'price_list' => [
                 1 => 0.04,
                 1000 => 0.035,
@@ -152,7 +152,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 6,
             'price_list' => [
                 1 => 0.04,
                 1000 => 0.035,
@@ -182,7 +182,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 8,
             'price_list' => [
                 1 => 0.04,
                 1000 => 0.035,
@@ -209,7 +209,7 @@ class ServicesTableSeeder extends Seeder {
             'speed' => '500-1000 в минуту',
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 32,
             'price_list' => [
                 1 => 0.07,
                 1000 => 0.07,
@@ -236,7 +236,7 @@ class ServicesTableSeeder extends Seeder {
             'speed' => '500-1000 в минуту',
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 38,
             'price_list' => [
                 1 => 0.5,
                 1000 => 0.5,
@@ -263,7 +263,7 @@ class ServicesTableSeeder extends Seeder {
             'speed' => '500-1000 в минуту',
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 55,
+            'nakrutka_id' => 37,
             'price_list' => [
                 1 => 0.65,
                 1000 => 0.65,
@@ -323,7 +323,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 19,
+            'nakrutka_id' => 16,
             'price_list' => [
                 1 => 0.0582,
                 1000 => 0.0582,
@@ -353,7 +353,7 @@ class ServicesTableSeeder extends Seeder {
             'info' => ['информация 1', 'информация 2'],
             'min' => 100,
             'max' => 10000,
-            'nakrutka_id' => 19,
+            'nakrutka_id' => 15,
             'price_list' => [
                 1 => 0.0388,
                 1000 => 0.0388,
