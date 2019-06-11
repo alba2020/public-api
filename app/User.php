@@ -95,6 +95,10 @@ class User extends Authenticatable {
         return $this->belongsTo('App\Proxy');
     }
 
+    public function premiumStatus() {
+        return $this->belongsTo('App\PremiumStatus');
+    }
+
     // ----------- roles ----------------
 
     /***
