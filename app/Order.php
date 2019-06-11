@@ -3,11 +3,8 @@
 namespace App;
 
 use App\Exceptions\EntityNotFoundException;
-use App\Exceptions\ForeignServiceException;
 use App\Exceptions\InsufficientFundsException;
-use App\Exceptions\MissingParameterException;
 use App\Exceptions\ServerException;
-use App\Services\NakrutkaService;
 use Tightenco\Parental\HasChildren;
 
 class Order extends BaseModel {
@@ -155,7 +152,7 @@ class Order extends BaseModel {
 //        echo "this->remains = $this->remains\n";
 
         if ($this->status === static::STATUS_PARTIAL_COMPLETED) {
-            $this->wallet->applyTransaction(
+            $this->user->wallet->applyTransaction(
                 Transaction::INFLOW_REFUND,
                 $refund,
                 "Order id: $this->id uuid: $this->uuid cost: $this->cost refund: $refund"
