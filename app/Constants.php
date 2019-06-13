@@ -46,4 +46,9 @@ class Constants extends Model
         self::SERVICE_INSTAGRAM_AUTO_LIKES_VIEWS_IMPRESSIONS => \App\Orders\AutoLikesViewsImpressions::class,
         self::SERVICE_INSTAGRAM_AUTO_VIEWS => \App\Orders\AutoViews::class,
     ];
+
+    const GROUP_LIKES = 'GROUP_LIKES';
+    const GROUP_VIEWS = 'GROUP_VIEWS';
+    const GROUP_SUBS = 'GROUP_SUBS';
+    const GROUP_OTHER = 'GROUP_OTHER';
 }

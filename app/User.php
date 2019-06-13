@@ -95,9 +95,9 @@ class User extends Authenticatable {
         return $this->belongsTo('App\Proxy');
     }
 
-    public function premiumStatus() {
-        return $this->belongsTo('App\PremiumStatus');
-    }
+//    public function premiumStatus() {
+//        return $this->belongsTo('App\PremiumStatus');
+//    }
 
     // ----------- roles ----------------
 
@@ -177,5 +177,18 @@ class User extends Authenticatable {
             $amount,
             "Money created"
         );
+    }
+
+    public function getPremiumStatus() {
+        $totalSpent = $this->wallet->getSpentOnOrders();
+
+        $currentStatus = PremiumStatus::where('cash', 0)->first();
+
+        foreach(PremiumStatus::all() as $ps) {
+            if ($ps->cash > $currentStatus->cash && $ps->cash <= $totalSpent) {
+                $currentStatus = $ps;
+            }
+        }
+        return $currentStatus;
     }
 }

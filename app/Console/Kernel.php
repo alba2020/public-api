@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Mockery\Exception;
 
 class Kernel extends ConsoleKernel {
     /**
@@ -22,7 +23,6 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-        $schedule->exec('touch token')->everyMinute();
         // $schedule->command('inspire')
         //          ->hourly();
 
@@ -33,6 +33,8 @@ class Kernel extends ConsoleKernel {
 //        $schedule->command('smm:get_statuses --save')->everyMinute();
 
         $schedule->command('smm:update_orders --save')->everyMinute();
+
+        $schedule->exec('touch token')->everyMinute();
 
 //        $schedule->command('smm:take1')->everyMinute();
 //        $schedule->command('smm:take5')->everyFiveMinutes();

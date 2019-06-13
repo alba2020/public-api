@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Order;
 use App\Services\NakrutkaService;
 use Illuminate\Console\Command;
+use Mockery\Exception;
 
 class UpdateOrders extends Command
 {

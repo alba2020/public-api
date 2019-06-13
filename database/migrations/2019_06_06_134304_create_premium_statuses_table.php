@@ -20,10 +20,13 @@ class CreatePremiumStatusesTable extends Migration {
             $table->boolean('friends_cashback')->default(0);
             $table->boolean('event_bonuses')->default(0);
 
-            $table->integer('discount_likes')->default('0');
-            $table->integer('discount_views')->default('0');
-            $table->integer('discount_subs')->default('0');
-            $table->integer('discount_rest')->default('0');
+//            $table->integer('discount_likes')->default('0');
+//            $table->integer('discount_views')->default('0');
+//            $table->integer('discount_subs')->default('0');
+//            $table->integer('discount_rest')->default('0');
+
+            // array
+            $table->text('discount');
 
             $table->boolean('premium_services')->default(0);
             $table->boolean('bonus_five_percent')->default(0);

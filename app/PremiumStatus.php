@@ -12,12 +12,14 @@ class PremiumStatus extends BaseModel
         'friends_cashback' => 'boolean',
         'event_bonuses' => 'boolean',
 
+        'discount' => 'array',
+
         'premium_services' => 'boolean',
         'bonus_five_percent' => 'boolean',
         'personal_manager' => 'boolean',
     ];
 
-    public function users() {
-        return $this->hasMany('App\User');
-    }
+//    public function users() {
+//        return $this->hasMany('App\User');
+//    }
 }

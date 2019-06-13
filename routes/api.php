@@ -74,6 +74,9 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('users/{id}/orders/g', 'UserController@ordersGrouped');
     Route::get('users/{id}/transactions', 'UserController@transactions');
 
+    Route::get('services/{service_id}/cost_premium/{n}', 'ServicesController@costPremium');
+    Route::post('services/costs_premium', 'ServicesController@costsPremium');
+
     // --------------- tasks -------------------
 //    Route::get('tasks', 'TasksController@index');
 //    Route::get('tasks/{task}', 'TasksController@show');

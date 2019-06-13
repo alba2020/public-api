@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -17,6 +18,7 @@ class CreateServicesTable extends Migration
             $table->increments('id');
             $table->string('type');
             $table->string('title');
+            $table->string('group')->default(Constants::GROUP_OTHER);
 
             $table->string('startup'); // 'до 5 минут'
             $table->string('speed'); // '500-1000 в минуту'

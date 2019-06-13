@@ -17,6 +17,18 @@ class Wallet extends BaseModel {
         return $rounded;
     }
 
+    public function getSum($type) {
+        $amount = $this->transactions()
+                    ->where('type', $type)
+                    ->get()
+                    ->sum('amount');
+        return $amount;
+    }
+
+    public function getSpentOnOrders() {
+        return $this->getSum(Transaction::OUTFLOW_ORDER);
+    }
+
     public function applyTransaction(
         string $type, float $amount, string $comment='') {
 

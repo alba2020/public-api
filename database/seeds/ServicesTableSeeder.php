@@ -25,6 +25,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_SUBS,
             'title' => 'Подписчики',
+            'group' => Constants::GROUP_SUBS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Качественные подписчики',
@@ -55,6 +56,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_LIKES,
             'title' => 'Быстрые лайки',
+            'group' => Constants::GROUP_LIKES,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Качественные лайки',
@@ -85,6 +87,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_LIKES_LIVE,
             'title' => 'Лайки в прямой эфир',
+            'group' => Constants::GROUP_LIKES,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Качественные лайки',
@@ -115,6 +118,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_VIEWS_IGTV,
             'title' => 'Просмотры IGTV',
+            'group' => Constants::GROUP_VIEWS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Качественные просмотры',
@@ -145,6 +149,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_VIEWS_VIDEO,
             'title' => 'Просмотры видео',
+            'group' => Constants::GROUP_VIEWS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Просмотры видео',
@@ -175,6 +180,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_VIEWS_VIDEO_IMPRESSIONS,
             'title' => 'Просмотры видео + охват',
+            'group' => Constants::GROUP_VIEWS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Просмотры видео',
@@ -205,6 +211,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_VIEWS_STORY,
             'title' => 'Просмотры Story',
+            'group' => Constants::GROUP_VIEWS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'min' => 100,
@@ -232,6 +239,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_VIEWS_SHOW_IMPRESSIONS,
             'title' => 'Просмотры Показы + Охват',
+            'group' => Constants::GROUP_VIEWS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'min' => 100,
@@ -259,6 +267,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_VIEWS_LIVE,
             'title' => 'Просмотры Зрители в прямой эфир',
+            'group' => Constants::GROUP_VIEWS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'min' => 100,
@@ -286,6 +295,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_AUTO_LIKES,
             'title' => 'Автолайки',
+            'group' => Constants::GROUP_LIKES,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Детали',
@@ -316,6 +326,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_AUTO_LIKES_VIEWS_IMPRESSIONS,
             'title' => 'Автолайки + Автопросмотры + Охват',
+            'group' => Constants::GROUP_OTHER,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Детали',
@@ -346,6 +357,7 @@ class ServicesTableSeeder extends Seeder {
         Service::create([
             'type' => Constants::SERVICE_INSTAGRAM_AUTO_VIEWS,
             'title' => 'Автопросмотры',
+            'group' => Constants::GROUP_VIEWS,
             'startup' => 'до 5 минут',
             'speed' => '500-1000 в минуту',
             'details' => 'Детали',
